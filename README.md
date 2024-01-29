@@ -1,6 +1,7 @@
 # NoozterWeb
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.1.
+The project is based on server side rendering to resolve the issue of SEO crawlers to be able to crawl pages
 
 ## Development server
 

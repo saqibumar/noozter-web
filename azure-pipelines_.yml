@@ -1,0 +1,62 @@
+trigger:
+  - master
+
+pool:
+  vmImage: "ubuntu-latest"
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "10.x"
+    displayName: "Install Node.js"
+
+  - task: Npm@1
+    displayName: "npm install angular cli"
+    inputs:
+      command: custom
+      verbose: false
+      customCommand: "install @angular/cli -g"
+
+  - task: Npm@1
+    displayName: "npm install packages"
+    inputs:
+      verbose: false
+
+  - script: "npm run build:ssr"
+    displayName: "build the project"
+
+
+  - task: CopyFiles@2
+    displayName: "Copy dist files to staging"
+    inputs:
+      SourceFolder: "$(Build.SourcesDirectory)/dist"
+
+      TargetFolder: "$(Build.ArtifactStagingDirectory)/app/dist"
+
+  - task: CopyFiles@2
+    displayName: "Copy server.js to the root"
+    inputs:
+      SourceFolder: "$(Build.ArtifactStagingDirectory)/app/dist"
+      Contents: server.js
+      TargetFolder: "$(Build.ArtifactStagingDirectory)/app"
+
+  - task: DeleteFiles@1
+    displayName: "Delete the dist/server.js"
+    inputs:
+      SourceFolder: "$(Build.ArtifactStagingDirectory)/app/dist"
+      Contents: server.js
+
+  - task: AzureRmWebAppDeployment@3
+    displayName: "Azure App Service Deploy: website"
+    inputs:
+      azureSubscription: "Subscription 1"
+      WebAppName: website
+      DeployToSlotFlag: true
+      ResourceGroupName: Temp
+      SlotName: master
+      Package: "$(Build.ArtifactStagingDirectory)/app"
+      GenerateWebConfig: true
+      WebConfigParameters: "-Handler iisnode -NodeStartFile server.js -appType node"
+      UseWebDeploy: true
+      RemoveAdditionalFilesFlag: true
+

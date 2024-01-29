@@ -1,0 +1,41 @@
+
+
+<div class="container body" Xstyle="overflow: auto;padding-bottom:100px;">
+    <div *ngIf="isLoading">Loading...</div>
+    <div class="jumbotron">
+    <h1>{{blurb}}</h1>
+    <p class="lead">{{story}}</p>
+  </div>
+  <hr>
+  {{city}}, {{country}}
+<hr>
+
+<div id="jquery_jplayer_1"></div>
+
+  <div class="content" *ngFor="let data of NoozMedias; let i = index">
+      <!-- {{data.MediaExtension}}
+      {{data.Uri}} -->
+      <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-6" *ngIf="data.MediaExtension==='.mp4'">
+              <!-- <embed [src]="data.Uri" 
+              frameborder="0" width="100%" height="500px"> -->
+              <!-- <div [innerHtml]="htmlSnippet | safe: 'html'"></div> -->
+              <video [src]="data.Uri | safe: 'resourceUrl'" controls width="100%" preload="auto" id="my-video">
+                Your browser does not support the <code>video</code> element.
+              </video>
+
+
+            </div>      
+      </div>
+      <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-6" *ngIf="data.MediaExtension==='.jpg' && data.DisplayPosition>-1">
+              <img src="{{data.Uri}}" width="100%">
+              
+          </div>              
+      </div>
+<hr>
+          
+  </div><hr>
+
+  
+</div>

@@ -1,0 +1,83 @@
+<div class="container body" Xstyle="overflow: auto;padding-bottom:100px;">
+  <div *ngIf="isLoading">Loading...</div>
+
+  <div class="content">
+    <div class="row" *ngFor="let nooz of AllNooz; let i = index">
+      <a
+        routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode }}/x"
+        class="aLinkNoStyle"
+      >
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <div class="row">
+            <div class="col-4">
+              <img src="{{ nooz.MediaUri }}" />
+            </div>
+            <div class="col-8">
+              <i>
+                {{ nooz.UserDisplayName }}
+                <img src="{{ nooz.ProfilePictureUri }}" class="profilePic" />
+                <br />
+                <u>{{ formatDate(nooz.CreatedDate) }}</u></i
+              >
+              <br />
+              {{ nooz.Blurb.substring(0, 120) }}...
+              <a
+                routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode }}/x"
+                >Continue reading...</a
+              >
+            </div>
+          </div>
+        </div>
+      </a>
+      <div class="col-12">
+        <hr
+          style="border: 0.3px solid silver; border-radius: 5px; width: 100%"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <input
+        [disabled]="isLoading || pageNumber <= 1"
+        type="button"
+        class="col-3"
+        (click)="loadPrev()"
+        value="Previous..."
+        *ngIf="AllNooz && pageNumber >= 1"
+      />
+      <input
+        *ngIf="selectedCountryCode"
+        [disabled]="isLoading || AllNooz.length < 50"
+        type="button"
+        class="col-3"
+        (click)="loadMore()"
+        value="Load more..."
+      />
+      <div
+        *ngIf="
+          !isLoading && AllNooz && AllNooz.length < 50 && selectedCountryCode
+        "
+        style="color: red"
+        class="col-12"
+      >
+        No more nooz available for the selected country
+      </div>
+      <div *ngIf="!selectedCountryCode">
+        <h1>Checkout daily nooz! Select a country below to see the nooz.</h1>
+      </div>
+      <hr style="border: 1px solid green; border-radius: 5px; width: 100%" />
+    </div>
+    <div class="row">
+      <div
+        class="col-sm-4 col-md-4 col-lg-4"
+        *ngFor="let cc of countryCodes; let i = index"
+      >
+        <a routerLink="{{ currentRoute }}/{{ cc }}" *ngIf="countryIndex !== i">
+          {{ GetCountryName(cc) }}
+        </a>
+        <div *ngIf="countryIndex === i">
+          {{ GetCountryName(cc) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

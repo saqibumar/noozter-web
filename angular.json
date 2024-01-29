@@ -155,7 +155,6 @@
       }
     }
   },
-  "defaultProject": "noozter-web",
   "cli": {
     "analytics": false
   }

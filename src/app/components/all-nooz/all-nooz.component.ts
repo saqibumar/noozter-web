@@ -15,6 +15,9 @@ import * as moment from 'moment';
   styleUrls: ['./all-nooz.component.css'],
 })
 export class AllNoozComponent implements OnInit {
+  allNoozShared: any = [];
+  showSearch: boolean;
+
   constructor(
     private noozSvc: AllNoozService,
     private http: HttpClient,
@@ -24,7 +27,8 @@ export class AllNoozComponent implements OnInit {
     private title: Title,
     private meta: Meta,
     private router: Router //private moment: Moment
-  ) {}
+  ) {
+  }
 
   safeSrc: SafeResourceUrl;
   blurb: string;
@@ -87,6 +91,10 @@ export class AllNoozComponent implements OnInit {
         this.pageNumber = 1;
         this.pageSize = 50;
         this.GetSelectedCountryNooz(countryCode);
+      } else {
+        this.noozSvc.updateValue([]);
+        // this.showSearch = false;
+        // this.noozSvc.updateInSearch(this.showSearch);
       }
       const index = this.countryCodes.indexOf(countryCode, 0);
       this.countryIndex = index;
@@ -97,19 +105,26 @@ export class AllNoozComponent implements OnInit {
       // console.log(getName(countryCode));
     });
     this.currentRoute = this.router.url.replace(countryCode, '');
+    this.noozSvc.allNooz$.subscribe(msg => this.allNoozShared = msg);
+    this.noozSvc.inSearch$.subscribe(msg => this.showSearch = msg);
+    this.showSearch = false;
+    this.noozSvc.updateInSearch(this.showSearch);
   }
 
   GetSelectedCountryNooz(countryCode) {
     // console.log(">>>>>>>>>", this.AllNooz);
+    
     this.noozSvc
       .getAllNooz(countryCode, this.pageNumber, this.pageSize)
       .subscribe(
         (data: any) => {
-          // console.log(data);
           this.isLoading = false;
+          data.Items = data.Items.filter(o => o.Blurb.indexOf('Nooz') <= 0)
           this.AllNooz = data.Items;
-          //this.AllNooz.push(data.Items);
-          // console.log(">>>>>>>>>", this.AllNooz[0]);
+          this.noozSvc.AllNooz = data.Items;
+          this.noozSvc.updateValue(this.AllNooz);
+          this.showSearch = true;
+          this.noozSvc.updateInSearch(this.showSearch);
         },
         (error) => {
           //console.log("Error: ", error);
@@ -120,7 +135,7 @@ export class AllNoozComponent implements OnInit {
           //to keep mp4 video on top
           //this.NoozMedias = this.array_move(this.NoozMedias);
           if (this.AllNooz.length < 50) {
-            this.toastr.info('No more nooz available for the selected country');
+            this.toastr.info('No more posts available for the selected country');
           }
           // console.log("api call finished");
         }

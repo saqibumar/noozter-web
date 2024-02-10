@@ -2,17 +2,17 @@
   <div *ngIf="isLoading">Loading...</div>
 
   <div class="content">
-    <div class="row" *ngFor="let nooz of AllNooz; let i = index">
+    <div class="row" *ngFor="let nooz of allNoozShared; let i = index">
       <a
         routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode }}/x"
         class="aLinkNoStyle"
       >
         <div class="col-sm-12 col-md-12 col-lg-12">
           <div class="row">
-            <div class="col-4">
-              <img src="{{ nooz.MediaUri }}" />
+            <div class="col-lg-4 col-md-5 col-sm-12 col-xs-12" style="text-align: center;">
+              <img src="{{ nooz.MediaUri }}" style="width: 100%;"/>
             </div>
-            <div class="col-8">
+            <div class="col-lg-8 col-md-7 col-sm-12 col-xs-12">
               <i>
                 {{ nooz.UserDisplayName }}
                 <img src="{{ nooz.ProfilePictureUri }}" class="profilePic" />
@@ -23,7 +23,7 @@
               {{ nooz.Blurb.substring(0, 120) }}...
               <a
                 routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode }}/x"
-                >Continue reading...</a
+                >Continue...</a
               >
             </div>
           </div>
@@ -42,11 +42,11 @@
         class="col-3"
         (click)="loadPrev()"
         value="Previous..."
-        *ngIf="AllNooz && pageNumber >= 1"
+        *ngIf="allNoozShared && pageNumber >= 1"
       />
       <input
         *ngIf="selectedCountryCode"
-        [disabled]="isLoading || AllNooz.length < 50"
+        [disabled]="isLoading || allNoozShared.length < 50"
         type="button"
         class="col-3"
         (click)="loadMore()"
@@ -54,15 +54,15 @@
       />
       <div
         *ngIf="
-          !isLoading && AllNooz && AllNooz.length < 50 && selectedCountryCode
+          !isLoading && allNoozShared && allNoozShared.length < 50 && selectedCountryCode
         "
         style="color: red"
         class="col-12"
       >
-        No more nooz available for the selected country
+        No more posts available for the selected country
       </div>
       <div *ngIf="!selectedCountryCode">
-        <h1>Checkout daily nooz! Select a country below to see the nooz.</h1>
+        <h1>Checkout daily posts! Select a country below to see the posts.</h1>
       </div>
       <hr style="border: 1px solid green; border-radius: 5px; width: 100%" />
     </div>

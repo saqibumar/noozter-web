@@ -62,7 +62,7 @@
         No more posts available for the selected country
       </div>
       <div *ngIf="!selectedCountryCode">
-        <h1>Checkout daily posts! Select a country below to see the posts.</h1>
+        <h1>Checkout daily posts! Select a country below to see the trending posts.</h1>
       </div>
       <hr style="border: 1px solid green; border-radius: 5px; width: 100%" />
     </div>
@@ -71,7 +71,10 @@
         class="col-sm-4 col-md-4 col-lg-4"
         *ngFor="let cc of countryCodes; let i = index"
       >
-        <a routerLink="{{ currentRoute }}/{{ cc }}" *ngIf="countryIndex !== i">
+        <a routerLink="{{ currentRoute.replace('/home', '') }}/world-nooz/{{ cc }}" *ngIf="referer && countryIndex !== i">
+          {{ GetCountryName(cc) }}
+        </a>
+        <a routerLink="{{ currentRoute.replace('/home', '') }}/{{ cc }}" *ngIf="!referer && countryIndex !== i">
           {{ GetCountryName(cc) }}
         </a>
         <div *ngIf="countryIndex === i">

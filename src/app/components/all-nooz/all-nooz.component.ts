@@ -1,5 +1,5 @@
 import { AllNoozService } from './all-nooz.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -15,6 +15,7 @@ import * as moment from 'moment';
   styleUrls: ['./all-nooz.component.css'],
 })
 export class AllNoozComponent implements OnInit {
+  @Input() referer!: any;
   allNoozShared: any = [];
   showSearch: boolean;
 
@@ -68,6 +69,12 @@ export class AllNoozComponent implements OnInit {
     'IT',
     'SA',
     'GB',
+    'CH',
+    'IN',
+    'IL',
+    'PS',
+    'UA',
+    'FR',
   ];
   countryIndex: number;
   countryName: string;

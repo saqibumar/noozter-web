@@ -24,6 +24,7 @@ import { PrivacyComponent } from './components/privacy/privacy.component';
 import { AboutComponent } from './components/about/about.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { TermsConditionsComponent } from './components/terms-conditions/terms-conditions.component';
+import { TrendingNoozComponent } from './components/trending-nooz/trending-nooz.component';
 
 const appRouter: Routes = [
   /*  { path: 'maps/:schoolCode', component: MapsComponent},
@@ -44,6 +45,10 @@ const appRouter: Routes = [
   { path: 'about', component: AboutComponent },
   { path: 'contact', component: ContactComponent },
   { path: 'terms', component: TermsConditionsComponent },
+  {
+    path: 'trending-nooz',
+    component: TrendingNoozComponent,
+  },
   {
     path: 'world-nooz',
     component: AllNoozComponent,
@@ -71,6 +76,7 @@ const appRouter: Routes = [
     ContactComponent,
     TermsConditionsComponent,
     AllNoozComponent,
+    TrendingNoozComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

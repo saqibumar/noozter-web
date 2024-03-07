@@ -1,12 +1,18 @@
 <div class="container body">
 <div class="jumbotron">
   <h1>[Noozter]</h1>
-  <p class="lead">Welcome to the social news platform where you are Everything!</p>
+  <p class="lead">Welcome to the social news platform where you are the <b>source of information 
+    <span class="material-symbols-outlined">
+      lightbulb
+      </span>
+  </b></p>
   
 </div>
 
+<app-trending-nooz referer="home"></app-trending-nooz>
+
 <div class="row">
-  <div class="col-md-4">
+  <!-- <div class="col-md-4">
       <h2>Around you</h2>
       <p>
           Know what is happening around you. Local posts created by the locals are at your finger tips.
@@ -23,7 +29,7 @@
       <h2>Relevant</h2>
       <p>You can like or dislike a post. Noozter will improve the posts delivered to you by learning your usage.</p>
       
-  </div>
+  </div> -->
   <hr style="border: 1px solid green; border-radius: 5px; width: 100%" />
   <app-all-nooz referer="home"></app-all-nooz>
 </div>

@@ -7,6 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { Meta, Title } from '@angular/platform-browser';
 import { AllNoozService } from '../all-nooz/all-nooz.service';
+import { TrendingNoozService } from '../trending-nooz/trending-nooz.service';
 
 declare var jquery: any;
 declare var $: any;
@@ -20,6 +21,7 @@ export class NoozComponent implements OnInit {
   showSearch: boolean;
   constructor(
     private allnoozSvc: AllNoozService,
+    private trendingnoozSvc: TrendingNoozService,
     private noozSvc: NoozService,
     private http: HttpClient,
     private route: ActivatedRoute,
@@ -43,7 +45,8 @@ export class NoozComponent implements OnInit {
 
   ngOnInit() {
     this.allnoozSvc.inSearch$.subscribe(msg => this.showSearch = msg);
-    this.showSearch = false;
+    this.trendingnoozSvc.inSearch$.subscribe(msg => this.showSearch = msg);
+    this.showSearch = undefined;
     let noozId, country, city;
     this.route.params.subscribe((params) => {
       //console.log(params);
@@ -104,6 +107,7 @@ export class NoozComponent implements OnInit {
           content: this.CreatedDate,
         });
         this.allnoozSvc.updateInSearch(this.showSearch);
+        this.trendingnoozSvc.updateInSearch(this.showSearch);
       },
       (error) => {
         //console.log("Error: ", error);

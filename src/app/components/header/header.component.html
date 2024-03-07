@@ -21,7 +21,11 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-item nav-link" href="/world-nooz">Worldwide posts</a>
+        <a class="nav-item nav-link" href="/trending-nooz">Trending</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-item nav-link" href="/world-nooz">Worldwide</a>
       </li>
       <li class="nav-item">
         <a class="nav-item nav-link" href="/about">About</a>
@@ -77,7 +81,7 @@
 <hr />
 <div class="container">
   <div class="row">
-    <div class="col-1" *ngIf="allNoozShared.length">
+    <div class="col-1" *ngIf="showSearch===undefined || (showSearch && (allNoozShared.length || trendingNoozShared.length))">
       <a href="javascript:history.back()" style="position: absolute; top: 15px;"> <i class="fa fa-arrow-left"></i> </a>
     </div>
     <div class="col" *ngIf="showSearch">
@@ -96,8 +100,8 @@
         <p *ngIf="isTyping">..........</p>
       </form>
     </div>
-    <div class="col text-right">
-      <a href="https://apps.apple.com/us/app/noozter/id1450430657?ls=1">
+    <div class="col text-right" style="height: 40px">
+      <!-- <a href="https://apps.apple.com/us/app/noozter/id1450430657?ls=1">
         <img
           alt="Get it on Apple store"
           class=""
@@ -114,7 +118,7 @@
           id="logo-img"
           src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
         />
-      </a>
+      </a> -->
     </div>
   </div>
 </div>

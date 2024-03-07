@@ -1,0 +1,160 @@
+<div class="container body" Xstyle="overflow: auto;padding-bottom:100px;">
+  <div *ngIf="isLoading">Loading...</div>
+
+  <div class="content" *ngIf="referer=='home'" [ngStyle]="referer=='home'?{'max-height': ''} : {'max-height': ''}"> 
+    <section>
+      <h1>
+        Trending
+      </h1>
+      
+    </section>
+    
+    <div class="rowx">
+      <div class="column">
+        <div *ngFor="let nooz of TrendingNoozCol1; let i = index">
+          <a
+          routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode }}/x/x"
+          class="aLinkNoStyle"
+          >
+          <div class="overlay-content">
+            {{ nooz.UserDisplayName }}
+          </div>
+          <img class="mediaImg"
+            src="{{ nooz.MediaUri }}" 
+            alt="{{nooz.Blurb.substring(0, 80)}}"
+          />
+        </a>
+      </div>
+      </div>
+      <div class="column">
+        <div *ngFor="let nooz of TrendingNoozCol2; let i = index" >
+          <a
+          routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode }}/x/x"
+          class="aLinkNoStyle"
+          >
+          <img 
+            src="{{ nooz.MediaUri }}" 
+            alt="{{nooz.Blurb.substring(0, 80)}}"
+          />
+          </a>
+        </div>
+      </div>
+      <div class="column">
+        <div *ngFor="let nooz of TrendingNoozCol3; let i = index" >
+          <a
+          routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode }}/x/x"
+          class="aLinkNoStyle"
+          >
+          <img 
+            src="{{ nooz.MediaUri }}" 
+            alt="{{nooz.Blurb.substring(0, 80)}}"
+          />
+          </a>
+        </div>
+      </div>
+      <div class="column">
+        <div *ngFor="let nooz of TrendingNoozCol4; let i = index" >
+          <a
+          routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode }}/x/x"
+          class="aLinkNoStyle"
+          >
+          <img 
+            src="{{ nooz.MediaUri }}" 
+            alt="{{nooz.Blurb.substring(0, 80)}}"
+          />
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="rowx" style="display: none;">
+      <div class="column" *ngFor="let nooz of trendingNoozShared; let i = index" style="width: 100%;">
+        <img src="{{ nooz.MediaUri }}" style="width: 100%;"/>
+        <!-- <hr style="border: 1px solid green; border-radius: 5px; width: 100%" /> -->
+        <a
+          routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode }}/x/x"
+          class="aLinkNoStyle"
+        >
+        {{i}}
+        <!-- <div class="col-sm-12 col-md-4 col-lg-4">
+          <div class="row"> -->
+            <div class="col-lg-4 col-md-5 col-sm-12 col-xs-12" style="text-align: center;">
+              <img src="{{ nooz.MediaUri }}" style="width: 100%;"/>
+            </div>
+            <!-- <div class="col-lg-8 col-md-7 col-sm-12 col-xs-12">
+              <i>
+                {{ nooz.UserDisplayName }}
+                <img src="{{ nooz.ProfilePictureUri }}" class="profilePic" />
+                <br />
+                <u>{{ formatDate(nooz.CreatedDate) }}</u></i
+              >
+              <br />
+              {{ nooz.Blurb.substring(0, 120) }}...
+              <a
+                routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode }}/x/x"
+                >Continue...</a
+              >
+            </div> -->
+          <!-- </div>
+        </div> -->
+      </a>
+    </div>
+    </div>
+  </div>
+
+  <div class="content" *ngIf="referer!='home'" [ngStyle]="referer=='home'?{'max-height': ''} : {'max-height': ''}"> 
+    <div class="row" *ngFor="let nooz of trendingNoozShared; let i = index">
+      <a
+        routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode }}/x/x"
+        class="aLinkNoStyle"
+      >
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <div class="row">
+            <div class="col-lg-4 col-md-5 col-sm-12 col-xs-12" style="text-align: center;">
+              <img src="{{ nooz.MediaUri }}" style="width: 100%;"/>
+            </div>
+            <div class="col-lg-8 col-md-7 col-sm-12 col-xs-12">
+              <i>
+                {{ nooz.UserDisplayName }}
+                <img src="{{ nooz.ProfilePictureUri }}" class="profilePic" />
+                <br />
+                <u>{{ formatDate(nooz.CreatedDate) }}</u></i
+              >
+              <br />
+              {{ nooz.Blurb.substring(0, 120) }}...
+              <a
+                routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode }}/x/x"
+                >Continue...</a
+              >
+            </div>
+          </div>
+        </div>
+      </a>
+      <div class="col-12">
+        <hr
+          style="border: 0.3px solid silver; border-radius: 5px; width: 100%"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <input
+        [disabled]="isLoading || pageNumber <= 1"
+        type="button"
+        class="col-3"
+        (click)="loadPrev()"
+        value="Previous..."
+        *ngIf="trendingNoozShared && pageNumber >= 1"
+      />
+      <input
+        *ngIf="selectedCountryCode"
+        [disabled]="isLoading || trendingNoozShared.length < 50"
+        type="button"
+        class="col-3"
+        (click)="loadMore()"
+        value="Load more..."
+      />
+      <!-- <hr style="border: 1px solid green; border-radius: 5px; width: 100%" /> -->
+    </div>
+  </div>
+</div>

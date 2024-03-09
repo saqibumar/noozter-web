@@ -42,6 +42,9 @@ export class NoozComponent implements OnInit {
   isLoading: boolean = true;
   htmlSnippet: string;
   CreatedDate: string;
+  NoozStatsSummary: {};
+  User: {};
+  TotalComments: number;
 
   ngOnInit() {
     this.allnoozSvc.inSearch$.subscribe(msg => this.showSearch = msg);
@@ -76,6 +79,9 @@ export class NoozComponent implements OnInit {
         this.CreatedDate = data.CreatedDate;
         this.NoozMedias = data.NoozMedias;
         this.blurb = data.Blurb;
+        this.NoozStatsSummary = data.NoozStatsSummary;
+        this.User = data.User;
+        this.TotalComments = data.TotalComments;
         this.city = data.City;
         this.country = data.Country;
         this.story = data.Story;

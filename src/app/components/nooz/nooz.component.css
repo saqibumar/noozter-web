@@ -7,6 +7,6 @@
 }
 
 video {
-    max-height: 600px;
-    object-fit: cover;
+    max-height: 50%;
+    /* object-fit: cover; */
 }

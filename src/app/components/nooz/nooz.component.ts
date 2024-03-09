@@ -66,7 +66,7 @@ export class NoozComponent implements OnInit {
     this.meta.updateTag({
       name: 'keywords',
       content:
-        "Current, news, latest news, Know what's happening around. Post and share with your community",
+        "Breaking news, Current affairs, news, posts, latest news, latest posts, Know what's happening around. Post and share with your community",
     });
 
     //this.noozSvc.getNoozDetails(67,'Mexico','Mexico City').subscribe(data => {

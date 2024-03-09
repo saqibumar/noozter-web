@@ -61,7 +61,7 @@ export class TrendingNoozComponent implements OnInit {
     }); */
     let countryCode;
     this.pageNumber = 1;
-    this.pageSize = this.referer == 'home'?26: 50;
+    this.pageSize = this.referer == 'home'?12: 50;
     // this.route.params.subscribe((params) => {
       this.GetTrendingNooz();
     // });
@@ -70,6 +70,33 @@ export class TrendingNoozComponent implements OnInit {
     this.trendingNoozSvc.inSearch$.subscribe(msg => this.showSearch = msg);
     this.showSearch = false;
     this.trendingNoozSvc.updateInSearch(this.showSearch);
+
+    this.meta.updateTag({
+      property: 'og:type',
+      content: 'video.other',
+    });
+    this.meta.updateTag({
+      property: 'og:title',
+      content: 'Noozter - Home news page',
+    });
+    this.meta.updateTag({
+      property: 'og:site_name',
+      content: 'Noozter - Home',
+    });
+    this.meta.updateTag({
+      property: 'og:url',
+      content: 'noozter.com',
+    });
+    this.meta.updateTag({
+      name: 'description',
+      content:
+        "Trendnding worldwide, Breaking news, Current affairs, news, posts, latest news, latest posts, about what's happening around.",
+    });
+    this.meta.updateTag({
+      name: 'keywords',
+      content:
+        "Breaking news, Quickview of new, Current affairs, news, posts, latest news, latest posts, accumulated news, search",
+    });
   }
 
 
@@ -92,10 +119,15 @@ export class TrendingNoozComponent implements OnInit {
 
             let tempNoozHolder = data.Items;
 
-            this.TrendingNoozCol1 = tempNoozHolder.splice(0,7);
+            this.TrendingNoozCol1 = tempNoozHolder.splice(0,3);
+            this.TrendingNoozCol2 = tempNoozHolder.splice(0,3);
+            this.TrendingNoozCol3 = tempNoozHolder.splice(0,3);
+            this.TrendingNoozCol4 = tempNoozHolder.splice(0,3);
+
+            /* this.TrendingNoozCol1 = tempNoozHolder.splice(0,7);
             this.TrendingNoozCol2 = tempNoozHolder.splice(0,6);
             this.TrendingNoozCol3 = tempNoozHolder.splice(0,7);
-            this.TrendingNoozCol4 = tempNoozHolder.splice(0,6);
+            this.TrendingNoozCol4 = tempNoozHolder.splice(0,6); */
 
             this.trendingNoozSvc.TrendingNooz = data.Items;
             this.trendingNoozSvc.updateValue(this.TrendingNooz);

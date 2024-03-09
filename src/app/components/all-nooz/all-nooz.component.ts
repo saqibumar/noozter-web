@@ -116,6 +116,32 @@ export class AllNoozComponent implements OnInit {
     this.noozSvc.inSearch$.subscribe(msg => this.showSearch = msg);
     this.showSearch = false;
     this.noozSvc.updateInSearch(this.showSearch);
+    this.meta.updateTag({
+      property: 'og:type',
+      content: 'video.other',
+    });
+    this.meta.updateTag({
+      property: 'og:title',
+      content: 'Noozter - Worldwide news page',
+    });
+    this.meta.updateTag({
+      property: 'og:site_name',
+      content: 'Noozter - Worldwide',
+    });
+    this.meta.updateTag({
+      property: 'og:url',
+      content: 'noozter.com',
+    });
+    this.meta.updateTag({
+      name: 'description',
+      content:
+        "Select country news, Current affairs, news, posts, latest news, latest posts, about what's happening around countries",
+    });
+    this.meta.updateTag({
+      name: 'keywords',
+      content:
+        "Breaking news, countrywide, Quickview of new, Current affairs, news, posts, latest news, latest posts, accumulated news, search countries",
+    });
   }
 
   GetSelectedCountryNooz(countryCode) {

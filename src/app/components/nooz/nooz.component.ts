@@ -42,7 +42,11 @@ export class NoozComponent implements OnInit {
   isLoading: boolean = true;
   htmlSnippet: string;
   CreatedDate: string;
-  NoozStatsSummary: {};
+  NoozStatsSummary: {
+    TotalRead: 0,
+    TotalLikes: 0,
+    TotalShared: 0,
+  };
   User: {};
   TotalComments: number;
 
@@ -85,6 +89,7 @@ export class NoozComponent implements OnInit {
         this.city = data.City;
         this.country = data.Country;
         this.story = data.Story;
+        this.story = this.urlify(this.story);
         this.isLoading = false;
         this.title.setTitle(this.blurb);
         this.meta.updateTag({
@@ -147,6 +152,15 @@ export class NoozComponent implements OnInit {
     }
     // console.log("AFTER>>>", arr);
     return arr; // for testing
+  }
+
+  urlify(text) {
+    var urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, function(url) {
+      return '<a title="Source link opens in new page" target="_new" href="' + url + '">Open source...</a>';
+    })
+    // or alternatively
+    // return text.replace(urlRegex, '<a href="$1">$1</a>')
   }
 
   ngAfterViewInit() {

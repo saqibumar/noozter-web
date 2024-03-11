@@ -69,12 +69,10 @@ export class AllNoozComponent implements OnInit {
     'IT',
     'SA',
     'GB',
-    'CH',
     'IN',
     'IL',
     'PS',
     'UA',
-    'FR',
   ];
   countryIndex: number;
   countryName: string;
@@ -122,7 +120,7 @@ export class AllNoozComponent implements OnInit {
     });
     this.meta.updateTag({
       property: 'og:title',
-      content: 'Noozter - Worldwide news page',
+      content: 'Noozter - Worldwide trending news, Breaking news, countrywide, Quickview of new, Current affairs, news, posts, latest news, latest posts, accumulated news, search countries',
     });
     this.meta.updateTag({
       property: 'og:site_name',

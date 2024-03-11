@@ -77,7 +77,7 @@ export class TrendingNoozComponent implements OnInit {
     });
     this.meta.updateTag({
       property: 'og:title',
-      content: 'Noozter - Home news page',
+      content: 'Noozter - Trending news, Breaking news, countrywide, Quickview of new, Current affairs, news, posts, latest news, latest posts, accumulated news, search countries',
     });
     this.meta.updateTag({
       property: 'og:site_name',

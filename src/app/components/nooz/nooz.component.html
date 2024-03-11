@@ -3,9 +3,9 @@
 <div class="container body" Xstyle="overflow: auto;padding-bottom:100px;">
     <div *ngIf="isLoading">Loading...</div>
     <div class="jumbotron">
-    <h1>{{blurb}}</h1>
-    <p class="lead">{{story}}</p>
-  </div>
+      <h1>{{blurb}}</h1>
+      <!-- <p class="lead" style="white-space: pre-wrap;" [innerHTML]="story"></p> -->
+    </div>
   <hr>
   <!-- {{city}}, {{country}} -->
   <div class="row">
@@ -14,17 +14,21 @@
     </div>
     <div class="col text-right">
       <div class="row">
-        <div class="col">
+        <div class="col text-center">
           {{NoozStatsSummary?.TotalRead}}<br>
           <i class="fa fa-eye" aria-hidden="true"></i>
         </div>
-        <div class="col">
+        <div class="col text-center">
           {{NoozStatsSummary?.TotalLikes}}<br>
           <i class="fa fa-heart" aria-hidden="true"></i>
         </div>
-        <div class="col">
+        <div class="col text-center">
           {{NoozStatsSummary?.TotalShared}}<br>
           <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </div>
+        <div class="col text-center">
+          {{TotalComments}}<br>
+          <i class="fa fa-comment" aria-hidden="true"></i>
         </div>
       </div>
     </div>
@@ -55,10 +59,16 @@
               
           </div>              
       </div>
-<hr>
+
           
   </div>
-  <hr>
+  <div class="row">
+    <div class="col">
+      <p class="lead" style="white-space: pre-wrap;" [innerHTML]="story"></p>
+    </div>
+  </div>
+<hr>
+<!-- <hr> -->
 
   
 </div>

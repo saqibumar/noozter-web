@@ -22,9 +22,18 @@
           /> 
           <!--[ngStyle]="{ 'background': 'url(&quot;' + nooz.MediaUri + '&quot;) no-repeat center center',
           'background-size': 'cover' }"-->
-          <div class="overlay-content" >
+          <div class="overlay-content">
             {{ nooz.Blurb.substring(0, 80) }}<br/>
-            By: {{ nooz.UserDisplayName }}
+            <div class="row">
+              <div class="col-1">
+                <img src="{{ nooz.ProfilePictureUri }}" class="profilePic" [title]="nooz.UserDisplayName" />
+              </div>
+              <div class="col">
+                {{ nooz.UserDisplayName }}
+              </div>
+            </div>
+            <br />
+            <u>{{ formatDate(nooz.CreatedDate) }}</u>
           </div>
         </a>
       </div>
@@ -41,7 +50,16 @@
           />
           <div class="overlay-content">
             {{ nooz.Blurb.substring(0, 80) }}<br/>
-            By: {{ nooz.UserDisplayName }}
+            <div class="row">
+              <div class="col-1">
+                <img src="{{ nooz.ProfilePictureUri }}" class="profilePic" [title]="nooz.UserDisplayName" />
+              </div>
+              <div class="col">
+                {{ nooz.UserDisplayName }}
+              </div>
+            </div>
+            <br />
+            <u>{{ formatDate(nooz.CreatedDate) }}</u>
           </div>
           </a>
         </div>
@@ -58,7 +76,16 @@
           />
           <div class="overlay-content">
             {{ nooz.Blurb.substring(0, 80) }}<br/>
-            By: {{ nooz.UserDisplayName }}
+            <div class="row">
+              <div class="col-1">
+                <img src="{{ nooz.ProfilePictureUri }}" class="profilePic" [title]="nooz.UserDisplayName" />
+              </div>
+              <div class="col">
+                {{ nooz.UserDisplayName }}
+              </div>
+            </div>
+            <br />
+            <u>{{ formatDate(nooz.CreatedDate) }}</u>
           </div>
           </a>
         </div>
@@ -75,7 +102,16 @@
           />
           <div class="overlay-content">
             {{ nooz.Blurb.substring(0, 80) }}<br/>
-            By: {{ nooz.UserDisplayName }}
+            <div class="row">
+              <div class="col-1">
+                <img src="{{ nooz.ProfilePictureUri }}" class="profilePic" [title]="nooz.UserDisplayName" />
+              </div>
+              <div class="col">
+                {{ nooz.UserDisplayName }}
+              </div>
+            </div>
+            <br />
+            <u>{{ formatDate(nooz.CreatedDate) }}</u>
           </div>
           </a>
         </div>

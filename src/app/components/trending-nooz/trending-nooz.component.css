@@ -9,7 +9,12 @@ img {
   padding: 10px;
 }
 .profilePic {
-  width: 40px;
+  width: 40px !important;
+  border-radius: 40px;
+  height: 40px;
+  position: absolute;
+  top: -16px;
+  left: 5px;
 }
 
 .aLinkNoStyle {
@@ -98,6 +103,12 @@ img {
     padding-right: 0px;
     padding-left: 0px;
   }
+
+  .overlay-content {
+    padding: 0px 10px 10px 10px;
+    border-bottom: 1px solid lightcoral;
+  }
+  
 }
 
 @media screen and (min-width: 576px) {
@@ -120,7 +131,7 @@ img {
   margin: 22px;
   max-width: 220px; */
   font-size: .8rem;
-  padding: 10px;
+  padding: 0px 10px 10px 10px;
 }
 
 .mediaImg {

@@ -44,11 +44,11 @@ export class TrendingNoozService {
 
   getFiltered(TrendingNooz: any, filterString: string): Observable<any> {
     this.showSearch=true;
-    console.log('filterString = ', filterString)
+    //console.log('filterString = ', filterString)
     if (filterString) {
       TrendingNooz = TrendingNooz.filter(s => {
         filterString = filterString.toUpperCase();
-        console.log('blob = ', filterString, s.Blurb.toUpperCase(), s.Blurb.toUpperCase().indexOf(filterString))
+        //console.log('blob = ', filterString, s.Blurb.toUpperCase(), s.Blurb.toUpperCase().indexOf(filterString))
         if (s.Blurb && s.Blurb.toUpperCase().indexOf(filterString) >= 0) {
           return true;
         }

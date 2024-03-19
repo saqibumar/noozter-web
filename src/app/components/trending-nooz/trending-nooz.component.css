@@ -12,6 +12,12 @@ img {
   width: 40px !important;
   border-radius: 40px;
   height: 40px;
+  /* position: absolute;
+  top: -16px;
+  left: 5px; */
+}
+
+.profilePic_aligned {
   position: absolute;
   top: -16px;
   left: 5px;
@@ -99,7 +105,7 @@ img {
   }
 
   .container {
-    max-width: 100% !important;
+    /* max-width: 100% !important; */
     padding-right: 0px;
     padding-left: 0px;
   }
@@ -113,7 +119,7 @@ img {
 
 @media screen and (min-width: 576px) {
   .container {
-      max-width: 100% !important;
+      /* max-width: 100% !important; */
   }
 }
 

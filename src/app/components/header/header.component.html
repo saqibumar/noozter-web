@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Noozter</a>
+  <a class="navbar-brand" href="#">Noozter {{countryCode}} <img style="width: 2rem;" src="{{country_flag}}" /></a>
   <button
     class="navbar-toggler"
     type="button"
@@ -20,11 +20,18 @@
         >
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item geo-links-main">
+        <a class="nav-item nav-link" href="/world-nooz/{{lat}}/{{lon}}">Nearby</a>
+      </li>
+      <li class="nav-item geo-links-main">
+        <a class="nav-item nav-link" href="/world-nooz/{{countryCode}}">{{country}}</a>
+      </li>
+
+      <li class="nav-item geo-links-main">
         <a class="nav-item nav-link" href="/trending-nooz">Trending</a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item geo-links-main">
         <a class="nav-item nav-link" href="/world-nooz">Worldwide</a>
       </li>
       <li class="nav-item">
@@ -41,22 +48,22 @@
       </li>
 
       <!-- <li class="nav-item">
-                  <a class="nav-item nav-link" href="#">I am interested</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Dropdown
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-              </li> -->
+          <a class="nav-item nav-link" href="#">I am interested</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">Disabled</a>
+      </li> -->
     </ul>
     <!-- <form class="form-inline my-2 my-lg-0">
       <input
@@ -78,11 +85,40 @@
     </a>
   </div>
 </nav>
-<hr />
+<!-- <hr /> -->
 <div class="container">
+  <div class="row geo-links">
+    <div class="col">
+      <ul class="navbar-nav mr-auto" style="flex-direction: row;">
+        <li class="nav-item">
+          <a class="nav-item nav-link" href="/world-nooz/{{lat}}/{{lon}}">Nearby</a>
+        </li>
+        <li class="nav-item">
+          &nbsp;&nbsp;
+        </li>
+        <li class="nav-item">
+          <a class="nav-item nav-link" href="/world-nooz/{{countryCode}}">{{country}}</a>
+        </li>
+        <li class="nav-item">
+          &nbsp;&nbsp;
+        </li>
+        <li class="nav-item">
+          <a class="nav-item nav-link" href="/trending-nooz">Trending</a>
+        </li>
+        <li class="nav-item">
+          &nbsp;&nbsp;
+        </li>  
+        <li class="nav-item">
+          <a class="nav-item nav-link" href="/world-nooz">Worldwide</a>
+        </li>
+  
+      </ul>
+    </div>
+  </div>
   <div class="row">
     <div class="col-1" *ngIf="showSearch===undefined || (showSearch && (allNoozShared.length || trendingNoozShared.length))">
-      <a href="javascript:history.back()" style="position: absolute; top: 15px;"> <i class="fa fa-arrow-left"></i> </a>
+      <a href="javascript:history.back()" style="position: absolute; top: 15px;" *ngIf="(allNoozShared.length || trendingNoozShared.length)"> <i class="fa fa-arrow-left"></i> </a>
+      <a href="/home" style="position: absolute; top: 15px;" *ngIf="(!allNoozShared.length && !trendingNoozShared.length)"> <i class="fa fa-arrow-left"></i> </a>
     </div>
     <div class="col" *ngIf="showSearch">
       <form class="form-inline my-2 my-lg-0" [formGroup]="filterForm">

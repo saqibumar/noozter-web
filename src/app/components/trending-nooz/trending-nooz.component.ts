@@ -115,6 +115,16 @@ export class TrendingNoozComponent implements OnInit {
               images.push(image);
             } */
             data.Items = data.Items.filter(o => o.Blurb.indexOf('Nooz') <= 0)
+            data.Items.map(o => {
+              let result = o.Blurb.lastIndexOf(".");
+              if (result == -1) {
+                result = o.Blurb.lastIndexOf("?");
+              }
+              if (result == -1) {
+                result = o.Blurb.lastIndexOf(" ");
+              }
+              o.Blurb = o.Blurb.substring(0, result+1)
+            })
             this.TrendingNooz = data.Items;
 
             let tempNoozHolder = data.Items;
@@ -144,8 +154,11 @@ export class TrendingNoozComponent implements OnInit {
         () => {
           //to keep mp4 video on top
           //this.NoozMedias = this.array_move(this.NoozMedias);
-          if (this.TrendingNooz.length < 50 && this.referer!='home') {
-            this.toastr.info('No more posts available for the selected country');
+          if (!this.TrendingNooz.length && this.referer!='home') {
+            this.toastr.info('No posts to show for the selected country.');
+          }
+          if (this.TrendingNooz.length && this.TrendingNooz.length < 50 && this.pageNumber > 1 && this.referer!='home') {
+            this.toastr.info('No posts to show for the selected country.');
           }
           // console.log("api call finished");
         }

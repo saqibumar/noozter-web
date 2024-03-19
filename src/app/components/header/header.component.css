@@ -1,0 +1,19 @@
+.geo-links {
+    display: block;
+    /* max-width: 100% !important; */
+}
+@media screen and (min-width: 991px) {
+    .geo-links {
+        display: none;
+        /* max-width: 100% !important; */
+    }
+    .geo-links-main {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .geo-links-main {
+        display: none;
+    }
+  }

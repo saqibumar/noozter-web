@@ -79,7 +79,7 @@ export class AuthInterceptor implements HttpInterceptor {
         )
       );
     } else {
-      // console.log('Token was null. Redirecting...');
+      console.log('Token was null. Redirecting...');
     }
   }
 }

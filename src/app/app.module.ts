@@ -57,6 +57,10 @@ const appRouter: Routes = [
     path: 'world-nooz/:countryCode',
     component: AllNoozComponent,
   },
+  {
+    path: 'world-nooz/:lat/:lon',
+    component: AllNoozComponent,
+  },
 
   { path: 'nooz/:noozId/:countryName/:cityName', component: NoozComponent },
   /*    { path: 'home/:schoolCode', component: HomeComponent },

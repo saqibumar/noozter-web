@@ -18,15 +18,23 @@
           >
           <img class="mediaImg"
             src="{{ nooz.MediaUri }}" 
-            alt="{{nooz.Blurb.substring(0, 80)}}"
+            alt="{{nooz.Blurb}}"
           /> 
           <!--[ngStyle]="{ 'background': 'url(&quot;' + nooz.MediaUri + '&quot;) no-repeat center center',
           'background-size': 'cover' }"-->
           <div class="overlay-content">
-            {{ nooz.Blurb.substring(0, 80) }}<br/>
+            {{ nooz.Blurb }}... <a href="#">Continue...</a>
+          <br/>
+            <!-- <i>
+              {{ nooz.UserDisplayName }}
+              <img src="{{ nooz.ProfilePictureUri }}" class="profilePic" />
+              <br />
+              <u>{{ formatDate(nooz.CreatedDate) }}</u></i
+            >
+            <br /> -->
             <div class="row">
               <div class="col-1">
-                <img src="{{ nooz.ProfilePictureUri }}" class="profilePic" [title]="nooz.UserDisplayName" />
+                <img src="{{ nooz.ProfilePictureUri }}" class="profilePic profilePic_aligned" [title]="nooz.UserDisplayName" />
               </div>
               <div class="col">
                 {{ nooz.UserDisplayName }}
@@ -46,13 +54,13 @@
           >
           <img  class="mediaImg"
             src="{{ nooz.MediaUri }}" 
-            alt="{{nooz.Blurb.substring(0, 80)}}"
+            alt="{{nooz.Blurb}}"
           />
           <div class="overlay-content">
-            {{ nooz.Blurb.substring(0, 80) }}<br/>
+            {{ nooz.Blurb }}... <a href="#">Continue...</a><br/>
             <div class="row">
               <div class="col-1">
-                <img src="{{ nooz.ProfilePictureUri }}" class="profilePic" [title]="nooz.UserDisplayName" />
+                <img src="{{ nooz.ProfilePictureUri }}" class="profilePic profilePic_aligned" [title]="nooz.UserDisplayName" />
               </div>
               <div class="col">
                 {{ nooz.UserDisplayName }}
@@ -72,13 +80,13 @@
           >
           <img  class="mediaImg"
             src="{{ nooz.MediaUri }}" 
-            alt="{{nooz.Blurb.substring(0, 80)}}"
+            alt="{{nooz.Blurb}}"
           />
           <div class="overlay-content">
-            {{ nooz.Blurb.substring(0, 80) }}<br/>
+            {{ nooz.Blurb }}... <a href="#">Continue...</a><br/>
             <div class="row">
               <div class="col-1">
-                <img src="{{ nooz.ProfilePictureUri }}" class="profilePic" [title]="nooz.UserDisplayName" />
+                <img src="{{ nooz.ProfilePictureUri }}" class="profilePic profilePic_aligned" [title]="nooz.UserDisplayName" />
               </div>
               <div class="col">
                 {{ nooz.UserDisplayName }}
@@ -98,13 +106,13 @@
           >
           <img  class="mediaImg"
             src="{{ nooz.MediaUri }}" 
-            alt="{{nooz.Blurb.substring(0, 80)}}"
+            alt="{{nooz.Blurb}}"
           />
           <div class="overlay-content">
-            {{ nooz.Blurb.substring(0, 80) }}<br/>
+            {{ nooz.Blurb }}... <a href="#">Continue...</a><br/>
             <div class="row">
               <div class="col-1">
-                <img src="{{ nooz.ProfilePictureUri }}" class="profilePic" [title]="nooz.UserDisplayName" />
+                <img src="{{ nooz.ProfilePictureUri }}" class="profilePic profilePic_aligned" [title]="nooz.UserDisplayName" />
               </div>
               <div class="col">
                 {{ nooz.UserDisplayName }}
@@ -132,13 +140,13 @@
             </div>
             <div class="col-lg-8 col-md-7 col-sm-12 col-xs-12">
               <i>
-                {{ nooz.UserDisplayName }}
                 <img src="{{ nooz.ProfilePictureUri }}" class="profilePic" />
+                {{ nooz.UserDisplayName }}
                 <br />
                 <u>{{ formatDate(nooz.CreatedDate) }}</u></i
               >
               <br />
-              {{ nooz.Blurb.substring(0, 120) }}...
+              {{ nooz.Blurb }}...
               <a
                 routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode }}/x/x"
                 >Continue...</a
@@ -160,7 +168,7 @@
         class="col-3"
         (click)="loadPrev()"
         value="Previous..."
-        *ngIf="trendingNoozShared && pageNumber >= 1"
+        *ngIf="trendingNoozShared.length && pageNumber > 1"
       />
       <input
         *ngIf="selectedCountryCode"

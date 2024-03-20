@@ -1,5 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Noozter {{countryCode}} <img style="width: 2rem;" src="{{country_flag}}" /></a>
+  <a class="navbar-brand" href="#">Noozter <img style="width: 2rem;" src="{{country_flag}}" /></a> 
+  <h3 class="country_heading" *ngIf="selectedCountry">(Watcing {{selectedCountry}})</h3>
   <button
     class="navbar-toggler"
     type="button"
@@ -120,7 +121,7 @@
       <a href="javascript:history.back()" style="position: absolute; top: 15px;" *ngIf="(allNoozShared.length || trendingNoozShared.length)"> <i class="fa fa-arrow-left"></i> </a>
       <a href="/home" style="position: absolute; top: 15px;" *ngIf="(!allNoozShared.length && !trendingNoozShared.length)"> <i class="fa fa-arrow-left"></i> </a>
     </div>
-    <div class="col" *ngIf="showSearch">
+    <div class="col" *ngIf="(showSearch && (allNoozShared.length || trendingNoozShared.length))" style="margin-top: 10px;">
       <form class="form-inline my-2 my-lg-0" [formGroup]="filterForm">
         <input
           class="form-control mr-sm-2"

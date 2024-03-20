@@ -94,6 +94,7 @@ const appRouter: Routes = [
     ReactiveFormsModule,
     RouterModule.forRoot(appRouter /* , {onSameUrlNavigation: 'reload'} */, {
       initialNavigation: 'enabled',
+      scrollPositionRestoration: 'enabled',
     }),
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyBg9uI-Qr7RrlxpnyhNxIx7CdPemyAhBvs',

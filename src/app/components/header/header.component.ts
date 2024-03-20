@@ -5,6 +5,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { HttpClient, HttpBackend  } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import { getCode, getName } from 'country-list';
 
 @Component({
   selector: 'header',
@@ -21,6 +22,7 @@ export class HeaderComponent implements OnInit {
   country_flag = '';
   lat = '';
   lon = '';
+  selectedCountry = '';
   filterForm: FormGroup;
   filterInput = new FormControl('');
   isTyping: boolean;
@@ -28,6 +30,7 @@ export class HeaderComponent implements OnInit {
   
   showSearch: boolean;
   allNoozShared: any = [];
+  countryFlagShared: any = '';
   trendingNoozShared: any = [];
   private httpClient: HttpClient;
 
@@ -51,17 +54,14 @@ export class HeaderComponent implements OnInit {
     await this.getGeoLocation(this.ipAddress);
 
     // Below extracts the country code from the url to be used for flag - https://ipgeolocation.io/static/flags/au_64.png
-    /* this.route.params.subscribe((params) => {
-      console.log(params);
-    });
-
     let cc = this.countryCode;
-    console.log(this.router.url);
+    // console.log(this.router.url);
     const extracted_countryCode_url = this.router.url.split(/[/ ]+/).pop();
-    console.log(extracted_countryCode_url)
+    // console.log(extracted_countryCode_url)
     // this.countryCode = extracted_countryCode_url;
     if (extracted_countryCode_url.length === 2)
-      this.country_flag = this.country_flag.replace(this.countryCode.toLocaleLowerCase(), extracted_countryCode_url.toLocaleLowerCase()); */
+      this.country_flag = this.country_flag.replace(this.countryCode.toLocaleLowerCase(), extracted_countryCode_url.toLocaleLowerCase());
+   
 
     this.filterForm = new FormGroup({
       filterInput: new FormControl(null,[Validators.required])
@@ -81,6 +81,15 @@ export class HeaderComponent implements OnInit {
 
     this.noozSvc.allNooz$.subscribe(msg => this.allNoozShared = msg);
     this.noozSvc.inSearch$.subscribe(msg => this.showSearch = msg);
+    this.noozSvc.countryFlag$.subscribe(msg => {
+      this.countryFlagShared = msg
+      if (this.countryFlagShared.length) {
+        this.country_flag = this.country_flag.replace(`${this.countryCode.toLocaleLowerCase()}_`, `${msg.toLocaleLowerCase()}_`);
+        this.countryCode = msg;
+        this.selectedCountry = getName(this.countryCode);
+      }
+      return this.countryFlagShared = msg
+    });
 
     this.trendingNoozSvc.trendingNooz$.subscribe(msg => this.trendingNoozShared = msg);
     this.trendingNoozSvc.inSearch$.subscribe(msg => this.showSearch = msg);
@@ -88,7 +97,13 @@ export class HeaderComponent implements OnInit {
     this.showSearch = false;
     this.noozSvc.updateInSearch(this.showSearch);
 
-    this.trendingNoozSvc.updateInSearch(this.showSearch)
+    this.trendingNoozSvc.updateInSearch(this.showSearch);
+
+    //if (this.countryFlagShared.length) {
+      // console.log(this.countryFlagShared, this.noozSvc.countryFlag$)
+      //this.country_flag = this.country_flag.replace(this.countryCode.toLocaleLowerCase(), this.countryFlagShared.toLocaleLowerCase());
+    // }
+
 
   }
 
@@ -122,7 +137,6 @@ export class HeaderComponent implements OnInit {
     if (typeof window === 'undefined') return;
     let res: any = window.localStorage.getItem('geo')
     res = JSON.parse(res);
-    console.log(res);
     if (res) {
       this.country = res.country_name;
       this.city = res.city;

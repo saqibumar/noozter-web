@@ -93,9 +93,11 @@ export class AllNoozComponent implements OnInit {
       //console.log(params);
       // console.log(this.router.url, window.location.pathname);
       countryCode = params.countryCode;
+      
       this.pageNumber = 1;
       this.pageSize = 50;
-    if (countryCode) {
+      if (countryCode) {
+        this.noozSvc.updateCountryCode(countryCode);
         this.selectedCountryCode = countryCode;
         this.isLoading = true;
         this.GetSelectedCountryNooz(countryCode);
@@ -103,9 +105,9 @@ export class AllNoozComponent implements OnInit {
         this.isLoading = true;
         this.GetLocalNooz(params.lat, params.lon);
       } else {
-        this.noozSvc.updateValue([]);
-        // this.showSearch = false;
-        // this.noozSvc.updateInSearch(this.showSearch);
+          this.noozSvc.updateValue([]);
+          // this.showSearch = false;
+          // this.noozSvc.updateInSearch(this.showSearch);
       }
       const index = this.countryCodes.indexOf(countryCode, 0);
       this.countryIndex = index;

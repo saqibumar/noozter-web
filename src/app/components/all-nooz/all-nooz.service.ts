@@ -17,10 +17,17 @@ export class AllNoozService {
   private allNoozSubject = new BehaviorSubject<any>([]);
   allNooz$ = this.allNoozSubject.asObservable();
 
+  private countryFlagSubject = new BehaviorSubject<any>([]);
+  countryFlag$ = this.countryFlagSubject.asObservable();
+
   private httpClientByPass: HttpClient;
 
   constructor(private http: HttpClient, httpBackend: HttpBackend,) {
     this.httpClientByPass = new HttpClient(httpBackend);
+  }
+
+  updateCountryCode(newVal: any) {
+    this.countryFlagSubject.next(newVal);
   }
 
   updateValue(newVal: any) {

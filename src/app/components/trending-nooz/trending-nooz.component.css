@@ -1,0 +1,146 @@
+.body {
+  overflow: auto;
+  padding-bottom: 100px;
+}
+
+img {
+  width: 300px;
+  /* height: 150px; */
+  padding: 10px;
+}
+.profilePic {
+  width: 40px !important;
+  border-radius: 40px;
+  height: 40px;
+  /* position: absolute;
+  top: -16px;
+  left: 5px; */
+}
+
+.profilePic_aligned {
+  position: absolute;
+  top: -16px;
+  left: 5px;
+}
+
+.aLinkNoStyle {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+  width: 100%;
+}
+
+
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+}
+
+.column img {
+  margin-top: 12px;
+  /* opacity: .4; */
+}
+
+.column img:hover {
+  /* opacity: 1; */
+  z-index: 999;
+}
+
+
+/* Clear floats after the columns */
+.rowx:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+
+.rowx {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  padding: 0 4px;
+}
+
+/* Create four equal columns that sits next to each other */
+.column {
+  -ms-flex: 25%; /* IE10 */
+  flex: 25%;
+  width: 25%;
+  padding: 0 4px;
+}
+
+.column img {
+  margin-top: 8px;
+  vertical-align: middle;
+  width: 100%;
+}
+
+@media screen and (max-width: 1200px) {
+  .column {
+    -ms-flex: 50%;
+    flex: 50%;
+    width: 50%;
+  }
+  /* .column img {
+    max-height: 300px;
+    object-fit: cover;
+  } */
+}
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media screen and (max-width: 850px) {
+  .column {
+    -ms-flex: 100%;
+    flex: 100%;
+    width: 100%;
+    padding: 0px;
+  }
+  .column img {
+    max-height: 300px;
+    object-fit: cover;
+  }
+
+  .container {
+    /* max-width: 100% !important; */
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+
+  .overlay-content {
+    padding: 0px 10px 10px 10px;
+    border-bottom: 1px solid lightcoral;
+  }
+  
+}
+
+@media screen and (min-width: 576px) {
+  .container {
+      /* max-width: 100% !important; */
+  }
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+/* @media screen and (max-width: 600px) {
+  .column {
+    -ms-flex: 100%;
+    flex: 100%;
+    width: 100%;
+  }
+} */
+
+.overlay-content {
+  /* position: absolute;
+  margin: 22px;
+  max-width: 220px; */
+  font-size: .8rem;
+  padding: 0px 10px 10px 10px;
+}
+
+.mediaImg {
+  max-height: 200px;
+  object-fit: cover;
+}

@@ -7,6 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { Meta, Title } from '@angular/platform-browser';
 import { AllNoozService } from '../all-nooz/all-nooz.service';
+import { TrendingNoozService } from '../trending-nooz/trending-nooz.service';
 
 declare var jquery: any;
 declare var $: any;
@@ -20,6 +21,7 @@ export class NoozComponent implements OnInit {
   showSearch: boolean;
   constructor(
     private allnoozSvc: AllNoozService,
+    private trendingnoozSvc: TrendingNoozService,
     private noozSvc: NoozService,
     private http: HttpClient,
     private route: ActivatedRoute,
@@ -40,10 +42,18 @@ export class NoozComponent implements OnInit {
   isLoading: boolean = true;
   htmlSnippet: string;
   CreatedDate: string;
+  NoozStatsSummary: {
+    TotalRead: 0,
+    TotalLikes: 0,
+    TotalShared: 0,
+  };
+  User: {};
+  TotalComments: number;
 
   ngOnInit() {
     this.allnoozSvc.inSearch$.subscribe(msg => this.showSearch = msg);
-    this.showSearch = false;
+    this.trendingnoozSvc.inSearch$.subscribe(msg => this.showSearch = msg);
+    this.showSearch = undefined;
     let noozId, country, city;
     this.route.params.subscribe((params) => {
       //console.log(params);
@@ -63,7 +73,7 @@ export class NoozComponent implements OnInit {
     this.meta.updateTag({
       name: 'keywords',
       content:
-        "Current, news, latest news, Know what's happening around. Post and share with your community",
+        "Breaking news, Current affairs, news, posts, latest news, latest posts, Know what's happening around. Post and share with your community",
     });
 
     //this.noozSvc.getNoozDetails(67,'Mexico','Mexico City').subscribe(data => {
@@ -73,9 +83,13 @@ export class NoozComponent implements OnInit {
         this.CreatedDate = data.CreatedDate;
         this.NoozMedias = data.NoozMedias;
         this.blurb = data.Blurb;
+        this.NoozStatsSummary = data.NoozStatsSummary;
+        this.User = data.User;
+        this.TotalComments = data.TotalComments;
         this.city = data.City;
         this.country = data.Country;
         this.story = data.Story;
+        this.story = this.urlify(this.story);
         this.isLoading = false;
         this.title.setTitle(this.blurb);
         this.meta.updateTag({
@@ -104,6 +118,7 @@ export class NoozComponent implements OnInit {
           content: this.CreatedDate,
         });
         this.allnoozSvc.updateInSearch(this.showSearch);
+        this.trendingnoozSvc.updateInSearch(this.showSearch);
       },
       (error) => {
         //console.log("Error: ", error);
@@ -137,6 +152,15 @@ export class NoozComponent implements OnInit {
     }
     // console.log("AFTER>>>", arr);
     return arr; // for testing
+  }
+
+  urlify(text) {
+    var urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, function(url) {
+      return '<a title="Source link opens in new page" target="_new" href="' + url + '">Open source...</a>';
+    })
+    // or alternatively
+    // return text.replace(urlRegex, '<a href="$1">$1</a>')
   }
 
   ngAfterViewInit() {

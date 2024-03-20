@@ -18,6 +18,7 @@ export class AllNoozComponent implements OnInit {
   @Input() referer!: any;
   allNoozShared: any = [];
   showSearch: boolean;
+  
 
   constructor(
     private noozSvc: AllNoozService,
@@ -27,8 +28,10 @@ export class AllNoozComponent implements OnInit {
     private toastr: ToastrService,
     private title: Title,
     private meta: Meta,
-    private router: Router //private moment: Moment
+    private router: Router, //private moment: Moment
+    
   ) {
+    
   }
 
   safeSrc: SafeResourceUrl;
@@ -69,12 +72,10 @@ export class AllNoozComponent implements OnInit {
     'IT',
     'SA',
     'GB',
-    'CH',
     'IN',
     'IL',
     'PS',
     'UA',
-    'FR',
   ];
   countryIndex: number;
   countryName: string;
@@ -89,19 +90,24 @@ export class AllNoozComponent implements OnInit {
     //console.log(this.countryCodes);
     let countryCode;
     this.route.params.subscribe((params) => {
-      // console.log(params);
+      //console.log(params);
       // console.log(this.router.url, window.location.pathname);
       countryCode = params.countryCode;
+      
+      this.pageNumber = 1;
+      this.pageSize = 50;
       if (countryCode) {
+        this.noozSvc.updateCountryCode(countryCode);
         this.selectedCountryCode = countryCode;
         this.isLoading = true;
-        this.pageNumber = 1;
-        this.pageSize = 50;
         this.GetSelectedCountryNooz(countryCode);
+      } else if (params.lat && params.lon) {
+        this.isLoading = true;
+        this.GetLocalNooz(params.lat, params.lon);
       } else {
-        this.noozSvc.updateValue([]);
-        // this.showSearch = false;
-        // this.noozSvc.updateInSearch(this.showSearch);
+          this.noozSvc.updateValue([]);
+          // this.showSearch = false;
+          // this.noozSvc.updateInSearch(this.showSearch);
       }
       const index = this.countryCodes.indexOf(countryCode, 0);
       this.countryIndex = index;
@@ -116,17 +122,54 @@ export class AllNoozComponent implements OnInit {
     this.noozSvc.inSearch$.subscribe(msg => this.showSearch = msg);
     this.showSearch = false;
     this.noozSvc.updateInSearch(this.showSearch);
+    this.meta.updateTag({
+      property: 'og:type',
+      content: 'video.other',
+    });
+    this.meta.updateTag({
+      property: 'og:title',
+      content: 'Noozter - Worldwide trending news, Breaking news, countrywide, Quickview of new, Current affairs, news, posts, latest news, latest posts, accumulated news, search countries',
+    });
+    this.meta.updateTag({
+      property: 'og:site_name',
+      content: 'Noozter - Worldwide',
+    });
+    this.meta.updateTag({
+      property: 'og:url',
+      content: 'noozter.com',
+    });
+    this.meta.updateTag({
+      name: 'description',
+      content:
+        "Select country news, Current affairs, news, posts, latest news, latest posts, about what's happening around countries",
+    });
+    this.meta.updateTag({
+      name: 'keywords',
+      content:
+        "Breaking news, countrywide, Quickview of new, Current affairs, news, posts, latest news, latest posts, accumulated news, search countries",
+    });
   }
 
-  GetSelectedCountryNooz(countryCode) {
+  GetLocalNooz(lat, lon) {
     // console.log(">>>>>>>>>", this.AllNooz);
     
     this.noozSvc
-      .getAllNooz(countryCode, this.pageNumber, this.pageSize)
+      .getCityNooz(lat, lon, this.pageNumber, this.pageSize)
       .subscribe(
         (data: any) => {
           this.isLoading = false;
           data.Items = data.Items.filter(o => o.Blurb.indexOf('Nooz') <= 0)
+          data.Items.map(o => {
+            //console.log(o.Blurb)
+            let result = o.Blurb.lastIndexOf(".");
+            if (result == -1) {
+              result = o.Blurb.lastIndexOf("?");
+            }
+            if (result == -1) {
+              result = o.Blurb.lastIndexOf(" ");
+            }
+            o.Blurb = o.Blurb.substring(0, result+1)
+          })
           this.AllNooz = data.Items;
           this.noozSvc.AllNooz = data.Items;
           this.noozSvc.updateValue(this.AllNooz);
@@ -141,8 +184,50 @@ export class AllNoozComponent implements OnInit {
         () => {
           //to keep mp4 video on top
           //this.NoozMedias = this.array_move(this.NoozMedias);
-          if (this.AllNooz.length < 50) {
-            this.toastr.info('No more posts available for the selected country');
+          if (this.AllNooz.length && this.AllNooz.length < 50 && this.pageNumber > 1) {
+            this.toastr.info('No posts to show for the selected country');
+          }
+          // console.log("api call finished");
+        }
+      );
+  }
+
+  GetSelectedCountryNooz(countryCode) {
+    // console.log(">>>>>>>>>", this.AllNooz);
+    
+    this.noozSvc
+      .getAllNooz(countryCode, this.pageNumber, this.pageSize)
+      .subscribe(
+        (data: any) => {
+          this.isLoading = false;
+          data.Items = data.Items.filter(o => o.Blurb.indexOf('Nooz') <= 0)
+          data.Items.map(o => {
+            // console.log(o.Blurb)
+            let result = o.Blurb.lastIndexOf(".");
+            if (result == -1) {
+              result = o.Blurb.lastIndexOf("?");
+            }
+            if (result == -1) {
+              result = o.Blurb.lastIndexOf(" ");
+            }
+            o.Blurb = o.Blurb.substring(0, result+1)
+          })
+          this.AllNooz = data.Items;
+          this.noozSvc.AllNooz = data.Items;
+          this.noozSvc.updateValue(this.AllNooz);
+          this.showSearch = true;
+          this.noozSvc.updateInSearch(this.showSearch);
+        },
+        (error) => {
+          //console.log("Error: ", error);
+          this.toastr.error('Unable to fetch.');
+          this.isLoading = false;
+        },
+        () => {
+          //to keep mp4 video on top
+          //this.NoozMedias = this.array_move(this.NoozMedias);
+          if (this.AllNooz.length && this.AllNooz.length < 50 && this.pageNumber > 1) {
+            this.toastr.info('No posts to show for the selected country.');
           }
           // console.log("api call finished");
         }

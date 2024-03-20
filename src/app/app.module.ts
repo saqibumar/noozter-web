@@ -24,6 +24,7 @@ import { PrivacyComponent } from './components/privacy/privacy.component';
 import { AboutComponent } from './components/about/about.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { TermsConditionsComponent } from './components/terms-conditions/terms-conditions.component';
+import { TrendingNoozComponent } from './components/trending-nooz/trending-nooz.component';
 
 const appRouter: Routes = [
   /*  { path: 'maps/:schoolCode', component: MapsComponent},
@@ -45,11 +46,19 @@ const appRouter: Routes = [
   { path: 'contact', component: ContactComponent },
   { path: 'terms', component: TermsConditionsComponent },
   {
+    path: 'trending-nooz',
+    component: TrendingNoozComponent,
+  },
+  {
     path: 'world-nooz',
     component: AllNoozComponent,
   },
   {
     path: 'world-nooz/:countryCode',
+    component: AllNoozComponent,
+  },
+  {
+    path: 'world-nooz/:lat/:lon',
     component: AllNoozComponent,
   },
 
@@ -71,6 +80,7 @@ const appRouter: Routes = [
     ContactComponent,
     TermsConditionsComponent,
     AllNoozComponent,
+    TrendingNoozComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -84,6 +94,7 @@ const appRouter: Routes = [
     ReactiveFormsModule,
     RouterModule.forRoot(appRouter /* , {onSameUrlNavigation: 'reload'} */, {
       initialNavigation: 'enabled',
+      scrollPositionRestoration: 'enabled',
     }),
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyBg9uI-Qr7RrlxpnyhNxIx7CdPemyAhBvs',

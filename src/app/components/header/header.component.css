@@ -1,0 +1,30 @@
+.geo-links {
+    display: block;
+    /* max-width: 100% !important; */
+}
+
+.country_heading {
+    color: lightyellow; font-size: 1.5vw;
+}
+@media screen and (min-width: 991px) {
+    .geo-links {
+        display: none;
+        /* max-width: 100% !important; */
+    }
+    .geo-links-main {
+        display: block;
+    }
+    .country_heading {
+        font-size: 1.25vw;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .geo-links-main {
+        display: none;
+    }
+
+    .country_heading {
+        color: lightyellow; font-size: 2.5vw;
+    }
+  }

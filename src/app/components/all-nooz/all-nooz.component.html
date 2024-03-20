@@ -4,7 +4,7 @@
   <div class="content">
     <div class="row" *ngFor="let nooz of allNoozShared; let i = index">
       <a
-        routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode }}/x"
+        routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode || 'x' }}/x"
         class="aLinkNoStyle"
       >
         <div class="col-sm-12 col-md-12 col-lg-12">
@@ -14,15 +14,15 @@
             </div>
             <div class="col-lg-8 col-md-7 col-sm-12 col-xs-12">
               <i>
-                {{ nooz.UserDisplayName }}
                 <img src="{{ nooz.ProfilePictureUri }}" class="profilePic" />
+                {{ nooz.UserDisplayName }}
                 <br />
                 <u>{{ formatDate(nooz.CreatedDate) }}</u></i
               >
               <br />
-              {{ nooz.Blurb.substring(0, 120) }}...
+              {{ nooz.Blurb }}...
               <a
-                routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode }}/x"
+                routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode || 'x' }}/x"
                 >Continue...</a
               >
             </div>
@@ -42,10 +42,10 @@
         class="col-3"
         (click)="loadPrev()"
         value="Previous..."
-        *ngIf="allNoozShared && pageNumber >= 1"
+        *ngIf="allNoozShared.length && pageNumber > 1"
       />
       <input
-        *ngIf="selectedCountryCode"
+        *ngIf="allNoozShared.length && selectedCountryCode"
         [disabled]="isLoading || allNoozShared.length < 50"
         type="button"
         class="col-3"
@@ -59,10 +59,10 @@
         style="color: red"
         class="col-12"
       >
-        No more posts available for the selected country
+        No posts to show for the selected country
       </div>
       <div *ngIf="!selectedCountryCode">
-        <h1>Checkout daily posts! Select a country below to see the trending posts.</h1>
+        <h1>Checkout daily posts! Select a country below to see the latest posts.</h1>
       </div>
       <hr style="border: 1px solid green; border-radius: 5px; width: 100%" />
     </div>

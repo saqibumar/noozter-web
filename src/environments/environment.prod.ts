@@ -1,4 +1,7 @@
 export const environment = {
+  mapbox: {
+    accessToken: 'pk.eyJ1Ijoicm9kcmlnb2thbWFkYSIsImEiOiJjbGZ5NTVhenAwanBzM3Fta3Y3b29temE5In0.PkdHrkHBrx9RALYhyLMRxA',
+  },
   production: true,
   noozDomain_old: "https://noozterwebapi.azurewebsites.net/api/v1/nooz/",
   noozDomain: "https://api.programmingalternatives.com/api/v1/nooz/",

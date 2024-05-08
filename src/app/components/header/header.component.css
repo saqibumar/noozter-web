@@ -2,6 +2,12 @@
     display: block;
     /* max-width: 100% !important; */
 }
+.bg-dark {
+    background-color: #2B5C7D !important;
+}
+.navbar-dark .navbar-nav .nav-link {
+    color: #fff !important;
+}
 
 .country_heading {
     color: lightyellow; font-size: 1.5vw;

@@ -1,5 +1,5 @@
 import { AllNoozService } from './all-nooz.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -8,6 +8,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Meta, Title } from '@angular/platform-browser';
 import { getCode, getName } from 'country-list';
 import * as moment from 'moment';
+import { DOCUMENT } from '@angular/common';
+import { GeoService } from 'src/app/services/Geo.service';
 
 @Component({
   selector: 'app-all-nooz',
@@ -19,7 +21,7 @@ export class AllNoozComponent implements OnInit {
   allNoozShared: any = [];
   showSearch: boolean;
   
-
+  private geoSvc: GeoService;
   constructor(
     private noozSvc: AllNoozService,
     private http: HttpClient,
@@ -29,8 +31,9 @@ export class AllNoozComponent implements OnInit {
     private title: Title,
     private meta: Meta,
     private router: Router, //private moment: Moment
-    
+    private renderer: Renderer2, @Inject(DOCUMENT) private document: Document
   ) {
+    this.geoSvc = new GeoService();
     
   }
 
@@ -80,6 +83,7 @@ export class AllNoozComponent implements OnInit {
   countryIndex: number;
   countryName: string;
   selectedCountryCode: string;
+  selectedLang = '';
 
   ngOnInit() {
     this.countryCodes = this.countryCodes.sort(function (a, b) {
@@ -97,6 +101,12 @@ export class AllNoozComponent implements OnInit {
       this.pageNumber = 1;
       this.pageSize = 50;
       if (countryCode) {
+        this.selectedLang = this.geoSvc.getLang(countryCode);
+        setTimeout(() => {
+          let htmlElement = this.document.querySelector('html');
+          this.renderer.setAttribute(htmlElement, 'lang', this.selectedLang);
+        }, 0);
+
         this.noozSvc.updateCountryCode(countryCode);
         this.selectedCountryCode = countryCode;
         this.isLoading = true;
@@ -235,7 +245,8 @@ export class AllNoozComponent implements OnInit {
   }
 
   GetCountryName(countryCode) {
-    return getName(countryCode);
+    return this.geoSvc.getName(countryCode);
+    //return getName(countryCode);
   }
   formatDate(d) {
     return moment(d).format('MMM DD, YYYY @hh:mm:ss a');

@@ -68,7 +68,8 @@ export class MapComponent implements AfterViewInit {
             lon = position.coords.longitude;
             observer.complete();
             },
-            (error: GeolocationPositionError) => {
+            // (error: GeolocationPositionError) => {
+            (error: any) => {
                 // console.log(error);
                 this.coordsFromIP = true;
                 observer.next({

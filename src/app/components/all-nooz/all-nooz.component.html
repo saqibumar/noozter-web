@@ -62,7 +62,7 @@
         No posts to show for the selected country
       </div>
       <div *ngIf="!selectedCountryCode">
-        <h1>Checkout daily posts! Select a country below to see the latest posts.</h1>
+        <h1>Select a country below to see their latest posts.</h1>
       </div>
       <hr style="border: 1px solid green; border-radius: 5px; width: 100%" />
     </div>
@@ -85,7 +85,7 @@
     <div class="row">
       <div
         class="col-12">
-        <app-map></app-map>
+        <app-map mapReferer="world" *ngIf="referer!='home'"></app-map>
       </div>
     </div>
   </div>

@@ -141,41 +141,29 @@ export class HeaderComponent implements OnInit {
 
   getIPAddressAndGeoLocation()
   {
-    this.httpClient.get("https://api.ipify.org/?format=json").subscribe((res:any) => {
+    this.httpClient.get("https://api.ipify.org/?format=json").subscribe(async (res:any) => {
       this.ipAddress = res.ip;
-      this.getGeoLocation(this.ipAddress);
+      await this.getGeoLocation(this.ipAddress);
       // return this.ipAddress;
     });
   }
 
   async getGeoLocation(ip: string)
   {
-    if (typeof window === 'undefined') return;
-    let hasIPChanged:boolean = false;
-    let res: any = window.localStorage.getItem('geo')
-    res = JSON.parse(res);
-
-    let localStorageIPAddress: any = window.localStorage.getItem('IPAddress');
-
-    if (localStorageIPAddress !== this.ipAddress) {
-      window.localStorage.setItem('IPAddress', this.ipAddress);
-      hasIPChanged = true;
-    }
-
-    if (res && !hasIPChanged) {
-      this.country = res.country_name;
-      this.city = res.city;
-      this.countryCode = res.country_code2;
-      this.regionName = res.city;
-      this.lat = res.latitude;
-      this.lon = res.longitude;
-      this.country_flag = res.country_flag;
-      
-    } else {
-      // e341bebc49334ad29b0ed2e363d6f537
-      // this.httpClient.get(`http://ip-api.com/json/${ip}`).subscribe((res:any)=>{
-        this.httpClient.get(`https://api.ipgeolocation.io/ipgeo?apiKey=e341bebc49334ad29b0ed2e363d6f537&ip=${ip}`).subscribe((res:any) => {
-        window.localStorage.setItem('geo', JSON.stringify(res));
+    const promise = new Promise((resolve, reject) => {
+      if (typeof window === 'undefined') return;
+      let hasIPChanged:boolean = false;
+      let res: any = window.localStorage.getItem('geo')
+      res = JSON.parse(res);
+  
+      let localStorageIPAddress: any = window.localStorage.getItem('IPAddress');
+  
+      if (localStorageIPAddress !== this.ipAddress) {
+        window.localStorage.setItem('IPAddress', this.ipAddress);
+        hasIPChanged = true;
+      }
+  
+      if (res && !hasIPChanged) {
         this.country = res.country_name;
         this.city = res.city;
         this.countryCode = res.country_code2;
@@ -183,11 +171,26 @@ export class HeaderComponent implements OnInit {
         this.lat = res.latitude;
         this.lon = res.longitude;
         this.country_flag = res.country_flag;
-      });
-    }
+        resolve(res);
+      } else {
+        // e341bebc49334ad29b0ed2e363d6f537
+        // this.httpClient.get(`http://ip-api.com/json/${ip}`).subscribe((res:any)=>{
+        this.httpClient.get(`https://api.ipgeolocation.io/ipgeo?apiKey=e341bebc49334ad29b0ed2e363d6f537&ip=${ip}`).subscribe((res:any) => {
+          window.localStorage.setItem('geo', JSON.stringify(res));
+          this.country = res.country_name;
+          this.city = res.city;
+          this.countryCode = res.country_code2;
+          this.regionName = res.city;
+          this.lat = res.latitude;
+          this.lon = res.longitude;
+          this.country_flag = res.country_flag;
+
+          resolve(res);
+  
+        });
+      }
+    });
   }
-
-
 }
 
 export interface GeoInfo {

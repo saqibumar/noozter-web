@@ -26,6 +26,7 @@ import { ContactComponent } from './components/contact/contact.component';
 import { TermsConditionsComponent } from './components/terms-conditions/terms-conditions.component';
 import { TrendingNoozComponent } from './components/trending-nooz/trending-nooz.component';
 import { MapComponent } from './components/map/map.component';
+import { AutocompleteLibModule } from './modules/autocomplete-lib-module.module';
 
 const appRouter: Routes = [
   /*  { path: 'maps/:schoolCode', component: MapsComponent},
@@ -88,6 +89,7 @@ const appRouter: Routes = [
     TrendingNoozComponent,
   ],
   imports: [
+    AutocompleteLibModule,
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     HttpModule,
     HttpClientModule,

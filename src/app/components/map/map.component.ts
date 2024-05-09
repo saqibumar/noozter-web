@@ -11,7 +11,8 @@ import { HttpBackend, HttpClient } from '@angular/common/http';
   styleUrls: ['./map.component.css'],
 })
 export class MapComponent implements AfterViewInit {
-    title = "Find places using angular version " + VERSION.major;
+    // title = "Find places using angular version " + VERSION.major;
+    title = "Find places on map. Click on map to reveal info";
     keyword = "display_name";
     loadingMapResults = false;
     public mapPlaces = [
@@ -268,6 +269,7 @@ export class MapComponent implements AfterViewInit {
             // console.log(`${ this.mapService.L.control.getMousePosition() }`)
             var marker = this.mapService.L.marker([lat, lng], { icon }).bindPopup(`[${lat.toFixed(3)}, ${lng.toFixed(3)}]\n${JSON.stringify(res.address)}`);
             marker.addTo(this.map);
+            marker.openPopup(coord);
             /* var corner1 = this.mapService.L.latLng(res.boundingbox[0], res.boundingbox[2]),
             corner2 = this.mapService.L.latLng(res.boundingbox[1], res.boundingbox[3]),
             bounds = this.mapService.L.latLngBounds(corner1, corner2);

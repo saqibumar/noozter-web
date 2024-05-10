@@ -13,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class MapComponent implements AfterViewInit {
     // title = "Find places using angular version " + VERSION.major;
-    title = "Find places on map. Click on map to reveal info";
+    title = "Find places. Click on map to reveal info.";
     keyword = "display_name";
     loadingMapResults = false;
     public mapPlaces = [

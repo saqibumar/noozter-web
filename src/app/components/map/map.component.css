@@ -1,5 +1,5 @@
 #map {
-    height: 70vh; /* 400px; */
+    height: 66vh; /* 400px; */
     width: 100%;
     /* max-width: 600px; */
     z-index: 0;
@@ -17,6 +17,13 @@
     right: 15px;
   }
 
+
+.locate-me {
+  position: absolute;
+  top: 7px;
+  left: 0px;
+}
+
   @media screen and (min-width: 768px) {
       .map-h1 {
           display: block;
@@ -29,7 +36,10 @@
         display: none;
         /* max-width: 100% !important; */
     }
+    @media screen and (max-width: 359px) {
+      .locate-me {
+        top: -42px;
+        left: 4px;
+      }
+    }
 }
-
-
-

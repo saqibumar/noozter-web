@@ -3,6 +3,7 @@ import { Observable, Subscriber } from 'rxjs';
 import * as L from 'leaflet';
 import { MapService } from 'src/app/services/map.service';
 import { HttpBackend, HttpClient } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 // import { environment } from 'src/environments/environment';
 
 @Component({
@@ -46,9 +47,11 @@ export class MapComponent implements AfterViewInit {
     private httpClient: HttpClient;
 
   map: any;
+  marker: any;
 
   constructor(
     private mapService: MapService,
+    private toastr: ToastrService,
     httpBackend: HttpBackend) {
     this.httpClient = new HttpClient(httpBackend);
   }
@@ -86,10 +89,28 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
+  private getCurrentPositionByIPAddress(): any {
+    return new Observable((observer: Subscriber<any>) => {
+      this.coordsFromIP = true;
+      // console.log(error);
+      this.coordsFromIP = true;
+      observer.next({
+          latitude: this.lat,
+          longitude: this.lon,
+      });
+      observer.complete();
+         
+  });
+}
+
   private getCurrentPosition(): any {
       return new Observable((observer: Subscriber<any>) => {
         this.coordsFromIP = false;
         var lat, lon;
+        if (!navigator.geolocation) {
+          this.toastr.warning("Geolocation is not supported by your browser");
+        }
+        
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position: any) => {
             observer.next({
@@ -98,20 +119,26 @@ export class MapComponent implements AfterViewInit {
             });
             lat = position.coords.latitude;
             lon = position.coords.longitude;
+            window.localStorage.setItem('geolocation-allowed', JSON.stringify({lat, lon}));
+            this.marker.name = 'userGeoMarker'
             observer.complete();
             },
             // (error: GeolocationPositionError) => {
             (error: any) => {
-                // console.log(error);
-                this.coordsFromIP = true;
-                observer.next({
-                    latitude: this.lat,
-                    longitude: this.lon,
-                });
-                observer.complete();
+              console.log(error);
+              this.toastr.warning('The location permission was denied.')
+              this.coordsFromIP = true;
+              observer.next({
+                  latitude: this.lat,
+                  longitude: this.lon,
+              });
+              window.localStorage.setItem('geolocation-allowed', null);
+              this.marker.name = 'userIPMarker'
+              observer.complete();
             });
         } else {
-            observer.error();
+          window.localStorage.setItem('geolocation-allowed', null);
+          observer.error();
         }
     });
   }
@@ -172,42 +199,67 @@ export class MapComponent implements AfterViewInit {
       return promise;
   }
 
-  private loadMap(): void {
-    if (this.mapReferer == 'world') {
-      this.map = this.mapService.L.map('map').setView([0, 0], 1);
-    } else {
-      this.map = this.mapService.L.map('map').setView([this.lat, this.lon], 1);
-    }
-    this.mapService.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      maxZoom: 18,
-    //   id: 'mapbox/streets-v11',
-      tileSize: 512,
-      zoomOffset: -1,
-    //   accessToken: environment.mapbox.accessToken,
-    }).addTo(this.map);
+  public loadMap(userInitiated:boolean = false): void {
+    let res: any = window.localStorage.getItem('geolocation-allowed')
+    res = JSON.parse(res);
 
-    if (this.mapReferer != 'world') {
-      this.getCurrentPosition().subscribe((position: any) => {
+    if (!this.map) {
+      if (this.mapReferer == 'world') {
+        this.map = this.mapService.L.map('map').setView([0, 0], 1);
+      } else {
+        this.map = this.mapService.L.map('map').setView([this.lat, this.lon], 1);
+      }
+      this.mapService.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+      //   id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+      //   accessToken: environment.mapbox.accessToken,
+      }).addTo(this.map);
+
+    }
+    const icon = this.mapService.L.icon({
+      iconUrl: '../../../assets/marker-icon.png',
+      shadowUrl: '../../../assets/marker-shadow.png',
+      popupAnchor: [13, 0],
+    });
+
+    this.map.eachLayer((layer) => {
+      // If the name property on the marker matches the name entered in the prompt:
+      if (layer.name === "userIPMarker" || layer.name === "userGeoMarker") {
+        // Remove the marker:
+        layer.removeFrom(this.map);
+      } else {
+      }
+    });
+
+
+    if (this.mapReferer != 'world' && !userInitiated && !res) {
+      this.getCurrentPositionByIPAddress().subscribe((position: any) => {
         this.map.flyTo([position.latitude, position.longitude], 13);
   
-        const icon = this.mapService.L.icon({
-          iconUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-icon.png',
-          shadowUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-shadow.png',
-          popupAnchor: [13, 0],
-        });
   
-        const marker = this.mapService.L.marker([position.latitude, position.longitude], { icon }).bindPopup(!this.coordsFromIP?'Your location!': 'Your estimated location');
-        marker.addTo(this.map);
+        this.marker = this.mapService.L.marker([position.latitude, position.longitude], { icon, draggable:true }).bindPopup(!this.coordsFromIP?'Your location!': 'Your estimated location');
+        this.marker.name = 'userIPMarker';
+        this.marker.addTo(this.map);
+      });
+    } else if ((this.mapReferer != 'world' && res) || (this.mapReferer != 'world' && userInitiated)) {
+      this.getCurrentPosition().subscribe((position: any) => {
+        this.map.flyTo([position.latitude, position.longitude], 13);
+
+        this.marker = this.mapService.L.marker([position.latitude, position.longitude], { icon, draggable:true }).bindPopup(!this.coordsFromIP?'Your location!': 'Your estimated location');
+        // this.marker.name = 'userGeoMarker'
+        this.marker.addTo(this.map);
       });
     }
   }
 
   private searchPlace(q:string): any {
     // console.log('q = ', q)
-    if (q.length < 3) return;
-    const promise = new Promise(async (resolve, reject) => {
-      await this.httpClient.get(`https://nominatim.openstreetmap.org/search.php?q=${q}&polygon_geojson=1&format=jsonv2`).subscribe((res:any) => {
+    const promise = new Promise((resolve, reject) => {
+      if (q.length < 3) reject('No enough characters');
+      this.httpClient.get(`https://nominatim.openstreetmap.org/search.php?q=${q}&polygon_geojson=1&format=jsonv2`).subscribe((res:any) => {
         if (res.length) {
           // console.log(res);
           this.mapPlaces = res;
@@ -250,9 +302,9 @@ export class MapComponent implements AfterViewInit {
         console.log('You clicked the map at latitude: ' + lat + ' and longitude: ' + lng);
 
         const icon = this.mapService.L.icon({
-          iconUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-icon.png',
-          shadowUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-shadow.png',
-          // iconSize:     [38, 95], // size of the icon
+          iconUrl: '../../../assets/marker-icon.png',
+          shadowUrl: '../../../assets/marker-shadow.png',
+              // iconSize:     [38, 95], // size of the icon
           // shadowSize:   [50, 64], // size of the shadow
           // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
           // shadowAnchor: [4, 62],  // the same for the shadow
@@ -267,9 +319,9 @@ export class MapComponent implements AfterViewInit {
         this.httpClient.get(url).subscribe((res:any) => {
           if (res) {
             // console.log(`${ this.mapService.L.control.getMousePosition() }`)
-            var marker = this.mapService.L.marker([lat, lng], { icon }).bindPopup(`[${lat.toFixed(3)}, ${lng.toFixed(3)}]\n${JSON.stringify(res.address)}`);
-            marker.addTo(this.map);
-            marker.openPopup(coord);
+            this.marker = this.mapService.L.marker([lat, lng], { icon }).bindPopup(`[${lat.toFixed(3)}, ${lng.toFixed(3)}]\n${JSON.stringify(res.address)}`);
+            this.marker.addTo(this.map);
+            this.marker.openPopup(coord);
             /* var corner1 = this.mapService.L.latLng(res.boundingbox[0], res.boundingbox[2]),
             corner2 = this.mapService.L.latLng(res.boundingbox[1], res.boundingbox[3]),
             bounds = this.mapService.L.latLngBounds(corner1, corner2);

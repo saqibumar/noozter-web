@@ -1,14 +1,17 @@
-<hr/>
+<hr *ngIf="mapReferer=='world'"/>
 <div class="container-fluid py-3">
-    <div class="row">
-      <div class="col-xl-4 col-lg-4 col-md-8 col-sm-12 col-xs-12"><h1>Map view</h1></div>
-      <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12">
-        <span>{{title}}</span>
-        <div class="app-autocomplete">
+    <div class="row h-25 content">
+      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12"><h1 class="map-h1">Map view</h1></div>
+      <div class="col-xl-2 col-lg-2 col-md-2 col-sm-4 col-4">
+        <button class="btn btn btn-outline-success btn-locate-me" (click)="loadMap(true)">Locate me</button>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-8 col-8">
+        <!-- <span>{{title}}</span> -->
+        <div class="app-autocomplete" [title]="title">
           <app-autocomplete
             [data]="mapPlaces"
             [searchKeyword]="keyword"
-            placeHolder="Enter the place name"
+            placeHolder="{{title}}"
             iconName = "search"
             (selected)='selectEvent($event)'
             (inputChanged)='onChangeSearch($event)'
@@ -21,7 +24,7 @@
 
           <div class="spinner-border" role="status" 
             *ngIf="loadingMapResults"
-            style="position: absolute; z-index: 999; top: 27px; right: 18px;">
+            style="position: absolute; z-index: 999; top: 4px; right: 18px;">
             <span class="sr-only">Loading...</span>
           </div>
         
@@ -37,4 +40,5 @@
     </div>
   
   <div id="map"></div>
+
 </div>

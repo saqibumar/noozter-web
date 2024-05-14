@@ -91,7 +91,6 @@ export class MapComponent implements AfterViewInit {
 
   private getCurrentPositionByIPAddress(): any {
     return new Observable((observer: Subscriber<any>) => {
-      this.coordsFromIP = true;
       // console.log(error);
       this.coordsFromIP = true;
       observer.next({
@@ -205,11 +204,11 @@ export class MapComponent implements AfterViewInit {
 
     if (!this.map) {
       if (this.mapReferer == 'world') {
-        this.map = this.mapService.L.map('map').setView([0, 0], 1);
+        this.map = this.mapService.L.map('map', {attributionControl: false}).setView([0, 0], 1);
       } else {
-        this.map = this.mapService.L.map('map').setView([this.lat, this.lon], 1);
+        this.map = this.mapService.L.map('map', {attributionControl: false}).setView([this.lat, this.lon], 1);
       }
-      this.mapService.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      this.mapService.L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 18,
       //   id: 'mapbox/streets-v11',
@@ -235,12 +234,13 @@ export class MapComponent implements AfterViewInit {
     });
 
 
+    var popup = this.mapService.L.popup()
+    .setContent(!this.coordsFromIP?'<strong>You!</strong>': '<span style="color:red;">Your estimated location</span>');
+
     if (this.mapReferer != 'world' && !userInitiated && !res) {
       this.getCurrentPositionByIPAddress().subscribe((position: any) => {
         this.map.flyTo([position.latitude, position.longitude], 13);
-  
-  
-        this.marker = this.mapService.L.marker([position.latitude, position.longitude], { icon, draggable:true }).bindPopup(!this.coordsFromIP?'Your location!': 'Your estimated location');
+        this.marker = this.mapService.L.marker([position.latitude, position.longitude], { icon, draggable:true }).bindPopup(popup);
         this.marker.name = 'userIPMarker';
         this.marker.addTo(this.map);
       });
@@ -248,7 +248,7 @@ export class MapComponent implements AfterViewInit {
       this.getCurrentPosition().subscribe((position: any) => {
         this.map.flyTo([position.latitude, position.longitude], 13);
 
-        this.marker = this.mapService.L.marker([position.latitude, position.longitude], { icon, draggable:true }).bindPopup(!this.coordsFromIP?'Your location!': 'Your estimated location');
+        this.marker = this.mapService.L.marker([position.latitude, position.longitude], { icon, draggable:true }).bindPopup(popup);
         // this.marker.name = 'userGeoMarker'
         this.marker.addTo(this.map);
       });
@@ -258,6 +258,7 @@ export class MapComponent implements AfterViewInit {
   private searchPlace(q:string): any {
     // console.log('q = ', q)
     const promise = new Promise((resolve, reject) => {
+      this.loadingMapResults = true;
       if (q.length < 3) reject('No enough characters');
       this.httpClient.get(`https://nominatim.openstreetmap.org/search.php?q=${q}&polygon_geojson=1&format=jsonv2`).subscribe((res:any) => {
         if (res.length) {
@@ -318,8 +319,13 @@ export class MapComponent implements AfterViewInit {
         let url = `https://nominatim.openstreetmap.org/reverse.php?lat=${lat}&lon=${lng}&zoom=18&format=jsonv2`;
         this.httpClient.get(url).subscribe((res:any) => {
           if (res) {
+            let innerHTML = '';
+            let result = Object.keys(res.address).map(e => {
+              innerHTML +=  e + ' = ' + res.address[e] + '<br>';
+            });
+            var popup = this.mapService.L.popup().setContent(`<strong>[${lat.toFixed(3)}, ${lng.toFixed(3)}]</strong><br>${innerHTML}`);        
             // console.log(`${ this.mapService.L.control.getMousePosition() }`)
-            this.marker = this.mapService.L.marker([lat, lng], { icon }).bindPopup(`[${lat.toFixed(3)}, ${lng.toFixed(3)}]\n${JSON.stringify(res.address)}`);
+            this.marker = this.mapService.L.marker([lat, lng], { icon, draggable:false }).bindPopup(popup);
             this.marker.addTo(this.map);
             this.marker.openPopup(coord);
             /* var corner1 = this.mapService.L.latLng(res.boundingbox[0], res.boundingbox[2]),

@@ -17,11 +17,11 @@
     right: 15px;
   }
 
-
 .locate-me {
   position: absolute;
   top: 7px;
   left: 0px;
+  cursor: pointer;
 }
 
   @media screen and (min-width: 768px) {
@@ -36,10 +36,13 @@
         display: none;
         /* max-width: 100% !important; */
     }
+    footer {
+      display: none !important;
+    }
     @media screen and (max-width: 359px) {
       .locate-me {
         top: -42px;
-        left: 4px;
+        left: 87vw;
       }
     }
 }

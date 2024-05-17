@@ -4,6 +4,8 @@ import * as L from 'leaflet';
 import { MapService } from 'src/app/services/map.service';
 import { HttpBackend, HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute } from '@angular/router';
+import { GeoService } from 'src/app/services/Geo.service';
 // import { environment } from 'src/environments/environment';
 
 @Component({
@@ -49,11 +51,47 @@ export class MapComponent implements AfterViewInit {
   map: any;
   marker: any;
 
+  countryCodes: string[] = [
+    'LY',
+    'BR',
+    'US',
+    'CO',
+    'LB',
+    'FR',
+    'CR',
+    'AU',
+    'RU',
+    'MX',
+    'PK',
+    'JP',
+    'TH',
+    'CH',
+    'ES',
+    'OM',
+    'CA',
+    'IE',
+    'AE',
+    'UK',
+    'TR',
+    'CN',
+    'IT',
+    'SA',
+    'GB',
+    'IN',
+    'IL',
+    'PS',
+    'UA',
+  ];
+  paramCountry: any;
+
+  private geoSvc: GeoService;
   constructor(
     private mapService: MapService,
     private toastr: ToastrService,
+    private route: ActivatedRoute,
     httpBackend: HttpBackend) {
-    this.httpClient = new HttpClient(httpBackend);
+      this.httpClient = new HttpClient(httpBackend);
+      if (!this.geoSvc) this.geoSvc = new GeoService();
   }
 
     
@@ -86,7 +124,33 @@ export class MapComponent implements AfterViewInit {
                 this.loadMap();
             } */
         // });
+        this.countryCodes = this.countryCodes.sort(function (a, b) {
+          var textA = a.toUpperCase();
+          var textB = b.toUpperCase();
+          return textA < textB ? -1 : textA > textB ? 1 : 0;
+        });
+        let countryCode;
+        this.route.params.subscribe((params) => {
+          countryCode = params.countryCode;
+          if (countryCode) {
+            this.paramCountry = this.GetCountryName(countryCode);
+            setTimeout(async () => {
+              // this.onChangeSearch(this.paramCountry);
+              this.searchPlace(this.paramCountry).then((res) => {
+                if (res) {
+                  this.selectEvent(res[0]);
+                  this.loadingMapResults = false;
+                }
+              });
+            });
+          }
+        });
     }
+  }
+
+  GetCountryName(countryCode) {
+    return this.geoSvc.getName(countryCode);
+    //return getName(countryCode);
   }
 
   private getCurrentPositionByIPAddress(): any {
@@ -217,6 +281,8 @@ export class MapComponent implements AfterViewInit {
       //   accessToken: environment.mapbox.accessToken,
       }).addTo(this.map);
 
+      this.map.flyTo([this.lat, this.lon], 13);
+
     }
     const icon = this.mapService.L.icon({
       iconUrl: '../../../assets/marker-icon.png',
@@ -262,7 +328,6 @@ export class MapComponent implements AfterViewInit {
       if (q.length < 3) reject('No enough characters');
       this.httpClient.get(`https://nominatim.openstreetmap.org/search.php?q=${q}&polygon_geojson=1&format=jsonv2`).subscribe((res:any) => {
         if (res.length) {
-          // console.log(res);
           this.mapPlaces = res;
           // let geojsonFeature = res[0].geojson;
           // this.mapService.L.geoJSON(geojsonFeature).addTo(this.map);
@@ -320,9 +385,11 @@ export class MapComponent implements AfterViewInit {
         this.httpClient.get(url).subscribe((res:any) => {
           if (res) {
             let innerHTML = '';
-            let result = Object.keys(res.address).map(e => {
-              innerHTML +=  e + ' = ' + res.address[e] + '<br>';
-            });
+            if (res.address) {
+              let result = Object.keys(res.address).map(e => {
+                innerHTML +=  e + ' = ' + res.address[e] + '<br>';
+              });
+            };
             var popup = this.mapService.L.popup().setContent(`<strong>[${lat.toFixed(3)}, ${lng.toFixed(3)}]</strong><br>${innerHTML}`);        
             // console.log(`${ this.mapService.L.control.getMousePosition() }`)
             this.marker = this.mapService.L.marker([lat, lng], { icon, draggable:false }).bindPopup(popup);
@@ -333,7 +400,11 @@ export class MapComponent implements AfterViewInit {
             bounds = this.mapService.L.latLngBounds(corner1, corner2);
             this.map.fitBounds(bounds); */
           }
-        });
+        }),
+        (error: any) => {
+          console.log(error);
+          // this.toastr.error('Location detail is not available');
+        }
     });
   }
 

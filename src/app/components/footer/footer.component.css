@@ -6,7 +6,6 @@
     .responsive-footer {
         font-size: 3vw;
     }
-
     nav {
       max-height: 28px;
     }
@@ -16,13 +15,13 @@
     }
   }
 
-  @media screen and (max-height: 550px) {
+  @media screen and (max-height: 500px) {
     nav {
       position: relative;
     }
   }
 
-  @media screen and (max-height: 250px) {
+  @media screen and (max-height: 650px) {
     nav {
       position: relative;
     }

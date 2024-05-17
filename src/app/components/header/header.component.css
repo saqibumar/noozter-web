@@ -6,12 +6,13 @@
     background-color: #2B5C7D !important;
 }
 .navbar-dark .navbar-nav .nav-link {
-    color: #fff !important;
+    color: #fff;
 }
 
 .country_heading {
     color: lightyellow; font-size: 1.5vw;
 }
+
 @media screen and (min-width: 991px) {
     .geo-links {
         display: none;

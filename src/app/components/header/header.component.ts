@@ -57,8 +57,8 @@ export class HeaderComponent implements OnInit {
     this.noozSvc.updateValue(this.noozSvc.AllNooz);
   } */
 
-  ngOnInit() {
-    this.getIPAddressAndGeoLocation();
+  async ngOnInit() {
+    await this.getIPAddressAndGeoLocation();
 
     // Below extracts the country code from the url to be used for flag - https://ipgeolocation.io/static/flags/au_64.png
     let cc = this.countryCode;
@@ -93,7 +93,13 @@ export class HeaderComponent implements OnInit {
     this.noozSvc.countryFlag$.subscribe(msg => {
       this.countryFlagShared = msg
       if (this.countryFlagShared.length) {
-        this.country_flag = this.country_flag.replace(`${this.countryCode.toLocaleLowerCase()}_`, `${msg.toLocaleLowerCase()}_`);
+        // console.log('flag', this.country_flag, '>>>', this.countryCode)
+        if (!this.countryCode) {
+          this.country_flag = this.country_flag.replace(`${this.countryFlagShared.toLocaleLowerCase()}_`, `${msg.toLocaleLowerCase()}_`);
+        } else {
+          this.country_flag = this.country_flag.replace(`${this.countryCode.toLocaleLowerCase()}_`, `${msg.toLocaleLowerCase()}_`);
+        }
+        this.countryCode = msg;
         this.selectedCountryCode = msg;
         this.selectedCountry = getName(this.selectedCountryCode);
         this.selectedLang = this.geoSvc.getLang(this.selectedCountryCode);
@@ -139,13 +145,17 @@ export class HeaderComponent implements OnInit {
 
   }
 
-  getIPAddressAndGeoLocation()
+  async getIPAddressAndGeoLocation()
   {
-    this.httpClient.get("https://api.ipify.org/?format=json").subscribe(async (res:any) => {
-      this.ipAddress = res.ip;
-      await this.getGeoLocation(this.ipAddress);
-      // return this.ipAddress;
+    const promise = new Promise((resolve, reject) => {
+      this.httpClient.get("https://api.ipify.org/?format=json").subscribe(async (res:any) => {
+        this.ipAddress = res.ip;
+        await this.getGeoLocation(this.ipAddress);
+        resolve(true);
+        // return this.ipAddress;
+      });
     });
+    return promise;
   }
 
   async getGeoLocation(ip: string)
@@ -190,6 +200,7 @@ export class HeaderComponent implements OnInit {
         });
       }
     });
+    return promise;
   }
 }
 

@@ -39,7 +39,7 @@
     footer {
       display: none !important;
     }
-    @media screen and (max-width: 359px) {
+    @media screen and (max-width: 389px) {
       .locate-me {
         top: -42px;
         left: 87vw;

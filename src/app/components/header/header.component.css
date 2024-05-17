@@ -2,10 +2,17 @@
     display: block;
     /* max-width: 100% !important; */
 }
+.bg-dark {
+    background-color: #2B5C7D !important;
+}
+.navbar-dark .navbar-nav .nav-link {
+    color: #fff;
+}
 
 .country_heading {
     color: lightyellow; font-size: 1.5vw;
 }
+
 @media screen and (min-width: 991px) {
     .geo-links {
         display: none;
@@ -26,5 +33,11 @@
 
     .country_heading {
         color: lightyellow; font-size: 2.5vw;
+    }
+  }
+
+  @media screen and (max-width: 300px) {
+    .geo-links .col {
+        font-size: 5vw;
     }
   }

@@ -19,3 +19,39 @@ img {
   text-decoration: inherit; /* no underline */
   width: 100%;
 }
+
+
+
+@media screen and (max-width: 767px) {
+  .head1 {
+      display: none;
+      /* max-width: 100% !important; */
+  }
+}
+
+@media screen and (max-width: 575px) {
+  
+  .scrollable {
+    position: absolute;
+    height: 300px;
+    z-index: 9;
+    overflow-y: scroll;
+    background-color: #F8F9FA;
+    width: 300px;
+  }
+}
+
+
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px
+}
+::-webkit-scrollbar-button {
+  background: #ccc
+}
+::-webkit-scrollbar-track-piece {
+  background: #888
+}
+::-webkit-scrollbar-thumb {
+  background: #eee;
+}

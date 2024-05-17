@@ -1,5 +1,5 @@
 import { AllNoozService } from './all-nooz.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -8,6 +8,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Meta, Title } from '@angular/platform-browser';
 import { getCode, getName } from 'country-list';
 import * as moment from 'moment';
+import { DOCUMENT } from '@angular/common';
+import { GeoService } from 'src/app/services/Geo.service';
 
 @Component({
   selector: 'app-all-nooz',
@@ -18,8 +20,10 @@ export class AllNoozComponent implements OnInit {
   @Input() referer!: any;
   allNoozShared: any = [];
   showSearch: boolean;
+  public isCollapsed = true;
+  public forceCollapsed = false;
   
-
+  private geoSvc: GeoService;
   constructor(
     private noozSvc: AllNoozService,
     private http: HttpClient,
@@ -29,8 +33,9 @@ export class AllNoozComponent implements OnInit {
     private title: Title,
     private meta: Meta,
     private router: Router, //private moment: Moment
-    
+    private renderer: Renderer2, @Inject(DOCUMENT) private document: Document
   ) {
+    this.geoSvc = new GeoService();
     
   }
 
@@ -80,6 +85,7 @@ export class AllNoozComponent implements OnInit {
   countryIndex: number;
   countryName: string;
   selectedCountryCode: string;
+  selectedLang = '';
 
   ngOnInit() {
     this.countryCodes = this.countryCodes.sort(function (a, b) {
@@ -87,16 +93,22 @@ export class AllNoozComponent implements OnInit {
       var textB = b.toUpperCase();
       return textA < textB ? -1 : textA > textB ? 1 : 0;
     });
-    //console.log(this.countryCodes);
     let countryCode;
     this.route.params.subscribe((params) => {
-      //console.log(params);
-      // console.log(this.router.url, window.location.pathname);
+      // Force the menu to be closed once clicked on nav-item
+      if (!this.isCollapsed) (this.document.getElementById("btnCountryListNav") as HTMLButtonElement).click(); 
+      // console.log('>>>>>>>>>>>>>', this.router.url, params);
       countryCode = params.countryCode;
       
       this.pageNumber = 1;
       this.pageSize = 50;
       if (countryCode) {
+        this.selectedLang = this.geoSvc.getLang(countryCode);
+        setTimeout(() => {
+          let htmlElement = this.document.querySelector('html');
+          this.renderer.setAttribute(htmlElement, 'lang', this.selectedLang);
+        }, 0);
+
         this.noozSvc.updateCountryCode(countryCode);
         this.selectedCountryCode = countryCode;
         this.isLoading = true;
@@ -116,23 +128,32 @@ export class AllNoozComponent implements OnInit {
       }
        */
       // console.log(getName(countryCode));
+      this.CreateSEOMetaTags(params);
     });
     this.currentRoute = this.router.url.replace(countryCode, '');
     this.noozSvc.allNooz$.subscribe(msg => this.allNoozShared = msg);
     this.noozSvc.inSearch$.subscribe(msg => this.showSearch = msg);
     this.showSearch = false;
-    this.noozSvc.updateInSearch(this.showSearch);
+    this.noozSvc.updateInSearch(this.showSearch);    
+  }
+
+  CreateSEOMetaTags (params) {
+    let placeString = "Around me";
+    if (params.countryCode) {
+      this.noozSvc.updateCountryCode(params.countryCode);
+      placeString = this.GetCountryName(this.selectedCountryCode)
+    }
     this.meta.updateTag({
       property: 'og:type',
       content: 'video.other',
     });
     this.meta.updateTag({
       property: 'og:title',
-      content: 'Noozter - Worldwide trending news, Breaking news, countrywide, Quickview of new, Current affairs, news, posts, latest news, latest posts, accumulated news, search countries',
+      content: `Noozter - ${placeString} trending news, Breaking news, countrywide, Quickview of new, Current affairs, news, posts, latest news, latest posts, accumulated news, search countries`,
     });
     this.meta.updateTag({
       property: 'og:site_name',
-      content: 'Noozter - Worldwide',
+      content: 'Noozter - ' + placeString,
     });
     this.meta.updateTag({
       property: 'og:url',
@@ -146,7 +167,7 @@ export class AllNoozComponent implements OnInit {
     this.meta.updateTag({
       name: 'keywords',
       content:
-        "Breaking news, countrywide, Quickview of new, Current affairs, news, posts, latest news, latest posts, accumulated news, search countries",
+        "Breaking news " + placeString + ", countrywide, Quickview of new, Current affairs, news, posts, latest news, latest posts, accumulated news, search countries",
     });
   }
 
@@ -235,7 +256,8 @@ export class AllNoozComponent implements OnInit {
   }
 
   GetCountryName(countryCode) {
-    return getName(countryCode);
+    return this.geoSvc.getName(countryCode);
+    //return getName(countryCode);
   }
   formatDate(d) {
     return moment(d).format('MMM DD, YYYY @hh:mm:ss a');

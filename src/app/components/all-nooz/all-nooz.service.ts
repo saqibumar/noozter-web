@@ -27,7 +27,9 @@ export class AllNoozService {
   }
 
   updateCountryCode(newVal: any) {
+    // console.log('newVal = ', newVal);
     this.countryFlagSubject.next(newVal);
+
   }
 
   updateValue(newVal: any) {

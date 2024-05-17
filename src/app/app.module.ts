@@ -25,6 +25,8 @@ import { AboutComponent } from './components/about/about.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { TermsConditionsComponent } from './components/terms-conditions/terms-conditions.component';
 import { TrendingNoozComponent } from './components/trending-nooz/trending-nooz.component';
+import { MapComponent } from './components/map/map.component';
+import { AutocompleteLibModule } from './modules/autocomplete-lib-module.module';
 
 const appRouter: Routes = [
   /*  { path: 'maps/:schoolCode', component: MapsComponent},
@@ -44,6 +46,7 @@ const appRouter: Routes = [
   { path: 'privacy', component: PrivacyComponent },
   { path: 'about', component: AboutComponent },
   { path: 'contact', component: ContactComponent },
+  { path: 'map', component: MapComponent },
   { path: 'terms', component: TermsConditionsComponent },
   {
     path: 'trending-nooz',
@@ -63,8 +66,10 @@ const appRouter: Routes = [
   },
 
   { path: 'nooz/:noozId/:countryName/:cityName', component: NoozComponent },
+
   /*    { path: 'home/:schoolCode', component: HomeComponent },
    { path: 'home/:Token', component: HomeComponent }, */
+
   { path: '**', redirectTo: 'home' },
 ];
 @NgModule({
@@ -78,11 +83,13 @@ const appRouter: Routes = [
     PrivacyComponent,
     AboutComponent,
     ContactComponent,
+    MapComponent,
     TermsConditionsComponent,
     AllNoozComponent,
     TrendingNoozComponent,
   ],
   imports: [
+    AutocompleteLibModule,
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     HttpModule,
     HttpClientModule,

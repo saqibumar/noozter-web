@@ -1,6 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Noozter <img style="width: 2rem;" src="{{country_flag}}" /></a> 
-  <h3 class="country_heading" *ngIf="selectedCountry">(Watcing {{selectedCountry}})</h3>
+  <a class="navbar-brand" href="#">Noozter <img style="width: 2rem; border: 1px solid #fff;" src="{{country_flag}}" alt="Flag of {{selectedCountry || country}}" /></a> 
+  <h3 class="country_heading" *ngIf="selectedCountry">({{selectedCountry}})</h3>
+
   <button
     class="navbar-toggler"
     type="button"
@@ -47,6 +48,9 @@
       <li class="nav-item">
         <a class="nav-item nav-link" href="/contact">Contact</a>
       </li>
+      <li class="nav-item geo-links-main">
+        <a class="nav-item nav-link" href="/map">Map view</a>
+      </li>
 
       <!-- <li class="nav-item">
           <a class="nav-item nav-link" href="#">I am interested</a>
@@ -81,6 +85,7 @@
       class="nav-item nav-link"
       href="https://x.com/noozter"
       target="_blank"
+      aria-label="Link to X (Former twitter)"
     >
       <i class="fa fa-brands fa-x-twitter"></i>
     </a>
@@ -95,22 +100,28 @@
           <a class="nav-item nav-link" href="/world-nooz/{{lat}}/{{lon}}">Nearby</a>
         </li>
         <li class="nav-item">
-          &nbsp;&nbsp;
+          <i class="material-icons" style="margin-top: 13px;font-size: 1rem;">arrow_forward</i>
         </li>
         <li class="nav-item">
-          <a class="nav-item nav-link" href="/world-nooz/{{countryCode}}">{{country}}</a>
+          <a class="nav-item nav-link" href="/world-nooz/{{countryCode}}" title="Explore posts related to {{country}}">{{country}}</a>
         </li>
         <li class="nav-item">
-          &nbsp;&nbsp;
+          <i class="material-icons" style="margin-top: 13px;font-size: 1rem;">arrow_forward</i>
         </li>
         <li class="nav-item">
           <a class="nav-item nav-link" href="/trending-nooz">Trending</a>
         </li>
         <li class="nav-item">
-          &nbsp;&nbsp;
-        </li>  
+          <i class="material-icons" style="margin-top: 13px;font-size: 1rem;">arrow_forward</i>
+        </li>
         <li class="nav-item">
-          <a class="nav-item nav-link" href="/world-nooz">Worldwide</a>
+          <a class="nav-item nav-link" href="/world-nooz">World</a>
+        </li>
+        <li class="nav-item">
+          <i class="material-icons" style="margin-top: 13px;font-size: 1rem;">arrow_forward</i>
+        </li>
+        <li class="nav-item">
+          <a class="nav-item nav-link" href="/map">Map</a>
         </li>
   
       </ul>
@@ -137,7 +148,7 @@
         <p *ngIf="isTyping">..........</p>
       </form>
     </div>
-    <div class="col text-right" style="height: 40px">
+    <!-- <div class="col text-right" style="height: 40px"> -->
       <!-- <a href="https://apps.apple.com/us/app/noozter/id1450430657?ls=1">
         <img
           alt="Get it on Apple store"
@@ -156,6 +167,6 @@
           src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
         />
       </a> -->
-    </div>
+    <!-- </div> -->
   </div>
 </div>

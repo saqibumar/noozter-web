@@ -1,0 +1,46 @@
+<hr *ngIf="mapReferer=='world'"/>
+<div class="container-fluid py-3">
+    <div class="row h-25 content">
+      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12"><h1 class="map-h1">Map view</h1></div>
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-11 col-11">
+        <!-- <span>{{title}}</span> -->
+        <div class="app-autocomplete" [title]="title">
+          <app-autocomplete
+            [data]="mapPlaces"
+            [searchKeyword]="keyword"
+            placeHolder="{{title}}"
+            iconName = "search"
+            (selected)='selectEvent($event)'
+            (inputChanged)='onChangeSearch($event)'
+            (inputFocused)='onFocused($event)'
+            historyIdentifier="mapPlaces"
+            [itemTemplate]="itemTemplate"
+            [notFoundTemplate]="notFoundTemplate" 
+            [style]="{opacity: loadingMapResults? 0.5: 1}">
+          </app-autocomplete>
+
+          <div class="spinner-border" role="status" 
+            *ngIf="loadingMapResults"
+            style="position: absolute; z-index: 999; top: 4px; right: 18px;">
+            <span class="sr-only">Loading...</span>
+          </div>
+        
+          <ng-template #itemTemplate let-item>
+            <a [innerHTML]="item.display_name"></a>
+          </ng-template>
+        
+          <ng-template #notFoundTemplate let-notFound>
+            <div [innerHTML]="notFound"></div>
+          </ng-template>
+        </div>
+      </div>
+      <div class="col-xl-2 col-lg-2 col-md-2 col-sm-1 col-1">
+        <!-- <button class="btn btn btn-outline-success btn-locate-me" (click)="loadMap(true)"> -->
+          <i class="material-icons locate-me" (click)="loadMap(true)">my_location</i>
+        <!-- </button> -->
+      </div>
+    </div>
+  
+  <div id="map"></div>
+
+</div>

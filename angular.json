@@ -20,16 +20,20 @@
             "tsConfig": "tsconfig.json",
             "aot": true,
             "assets": [
-              "src/favicon.ico", 
+              "src/favicon.ico",
               "src/assets",
               "src/Web.config",
               "src/robots.txt",
               "src/sitemap.xml"
             ],
-            "styles": ["src/styles.css", "node_modules/ngx-toastr/toastr.css",
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
+              "src/styles.css",
+              "node_modules/ngx-toastr/toastr.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css",
-              "node_modules/leaflet/dist/leaflet.css"],
+              "node_modules/leaflet/dist/leaflet.css"
+            ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ]
@@ -89,8 +93,14 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.css"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
+              "src/styles.css"
+            ],
             "scripts": []
           }
         },
@@ -103,7 +113,9 @@
               "e2e/tsconfig.json",
               "tsconfig.server.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "e2e": {
@@ -157,7 +169,9 @@
           "options": {
             "browserTarget": "noozter-web:build:production",
             "serverTarget": "noozter-web:server:production",
-            "routes": ["/"]
+            "routes": [
+              "/"
+            ]
           },
           "configurations": {
             "production": {}

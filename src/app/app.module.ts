@@ -29,8 +29,9 @@ import { AutocompleteLibModule } from './modules/autocomplete-lib-module.module'
 import { InvestorPageComponent } from './components/investor-page/investor-page.component';
 import { InvestDialogComponent } from './components/invest-dialog/invest-dialog.component';
 
-// import { MatDialogModule } from '@angular/material/dialog';
-// import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 const appRouter: Routes = [
   /*  { path: 'maps/:schoolCode', component: MapsComponent},
@@ -104,8 +105,9 @@ const appRouter: Routes = [
     FormsModule,
     BrowserModule,
     BrowserAnimationsModule,
-    // MatDialogModule,
-    // MatButtonModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatToolbarModule,
     ToastrModule.forRoot(),
     ReactiveFormsModule,
     RouterModule.forRoot(appRouter /* , {onSameUrlNavigation: 'reload'} */, {

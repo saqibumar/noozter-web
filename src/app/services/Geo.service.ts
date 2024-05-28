@@ -44,7 +44,19 @@ export class GeoService {
       }
       
       getName = function getName (code) {
-        return this.codeMap[code.toLowerCase()]
+        var countryName = this.codeMap[code.toLowerCase()];
+        try {
+          if (countryName) {
+            var split = countryName.split(' ');
+            if (split.length>4) {
+              return code
+            }
+          }
+        }
+        catch(err) {
+          console.log(countryName, code)
+        }
+        return countryName;
       }
       
       getNames = function getNames () {

@@ -1,0 +1,21 @@
+.error {
+    color: red;
+  }
+
+  .success {
+    color: green;
+  }
+  
+  .invalid-feedback {
+    color: red;
+    display: block !important;
+  }
+  
+  /* Optional: Adjust styles for form fields */
+  input[type="name"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="text"] {
+    width: 100%;
+  }
+  

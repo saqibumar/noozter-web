@@ -4,7 +4,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
-import { AgmCoreModule } from '@agm/core';
 //import { EmbedVideo } from 'ngx-embed-video';
 
 import { BrowserModule } from '@angular/platform-browser';
@@ -27,6 +26,11 @@ import { TermsConditionsComponent } from './components/terms-conditions/terms-co
 import { TrendingNoozComponent } from './components/trending-nooz/trending-nooz.component';
 import { MapComponent } from './components/map/map.component';
 import { AutocompleteLibModule } from './modules/autocomplete-lib-module.module';
+import { InvestorPageComponent } from './components/investor-page/investor-page.component';
+import { InvestDialogComponent } from './components/invest-dialog/invest-dialog.component';
+
+// import { MatDialogModule } from '@angular/material/dialog';
+// import { MatButtonModule } from '@angular/material/button';
 
 const appRouter: Routes = [
   /*  { path: 'maps/:schoolCode', component: MapsComponent},
@@ -43,8 +47,9 @@ const appRouter: Routes = [
   // { path: ':Token', component: HomeComponent },
   { path: '', component: HomeComponent },
   { path: 'home', component: HomeComponent },
-  { path: 'privacy', component: PrivacyComponent },
+  // { path: 'privacy', component: PrivacyComponent },
   { path: 'about', component: AboutComponent },
+  { path: 'investor', component: InvestorPageComponent },
   { path: 'contact', component: ContactComponent },
   { path: 'map', component: MapComponent },
   { path: 'terms', component: TermsConditionsComponent },
@@ -70,7 +75,7 @@ const appRouter: Routes = [
   /*    { path: 'home/:schoolCode', component: HomeComponent },
    { path: 'home/:Token', component: HomeComponent }, */
 
-  { path: '**', redirectTo: 'home' },
+  // { path: '**', redirectTo: 'home' },
 ];
 @NgModule({
   declarations: [
@@ -87,6 +92,8 @@ const appRouter: Routes = [
     TermsConditionsComponent,
     AllNoozComponent,
     TrendingNoozComponent,
+    InvestorPageComponent,
+    InvestDialogComponent,
   ],
   imports: [
     AutocompleteLibModule,
@@ -97,15 +104,15 @@ const appRouter: Routes = [
     FormsModule,
     BrowserModule,
     BrowserAnimationsModule,
+    // MatDialogModule,
+    // MatButtonModule,
     ToastrModule.forRoot(),
     ReactiveFormsModule,
     RouterModule.forRoot(appRouter /* , {onSameUrlNavigation: 'reload'} */, {
-      initialNavigation: 'enabled',
-      scrollPositionRestoration: 'enabled',
-    }),
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyBg9uI-Qr7RrlxpnyhNxIx7CdPemyAhBvs',
-    }),
+    initialNavigation: 'enabled',
+    scrollPositionRestoration: 'enabled',
+    relativeLinkResolution: 'legacy'
+}),
   ],
   providers: [
     // ToastrService,

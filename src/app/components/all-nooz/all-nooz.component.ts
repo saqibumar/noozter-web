@@ -86,8 +86,14 @@ export class AllNoozComponent implements OnInit {
   countryName: string;
   selectedCountryCode: string;
   selectedLang = '';
+  homeCC = '';
 
   ngOnInit() {
+    if (typeof window !== 'undefined') {
+      let localStorageGeo: any = window.localStorage.getItem('geo-maxmind');
+      localStorageGeo = JSON.parse(localStorageGeo);
+      this.homeCC = localStorageGeo.city.RegisteredCountry.IsoCode;
+    }
     this.countryCodes = this.countryCodes.sort(function (a, b) {
       var textA = a.toUpperCase();
       var textB = b.toUpperCase();

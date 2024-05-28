@@ -1,8 +1,9 @@
-<hr *ngIf="mapReferer=='world'"/>
+<!-- <hr *ngIf="mapReferer=='world'"/> -->
 <div class="container-fluid py-3">
     <div class="row h-25 content">
-      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12"><h1 class="map-h1">Map view</h1></div>
+      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12"><h1 class="map-h1">IP to location</h1></div>
       <div class="col-xl-6 col-lg-6 col-md-6 col-sm-11 col-11">
+        <!-- <input type="text" placeholder="Enter IP address"> -->
         <!-- <span>{{title}}</span> -->
         <div class="app-autocomplete" [title]="title">
           <app-autocomplete
@@ -37,10 +38,46 @@
       <div class="col-xl-2 col-lg-2 col-md-2 col-sm-1 col-1">
         <!-- <button class="btn btn btn-outline-success btn-locate-me" (click)="loadMap(true)"> -->
           <i class="material-icons locate-me" (click)="loadMap(true)">my_location</i>
+          <!-- <div *ngIf="permissionDenied">
+            <p>Location access was denied. Please enable location access in your browser settings and try again.</p>
+            <button (click)="requestLocation()">Retry</button>
+          </div> -->
         <!-- </button> -->
       </div>
     </div>
   
-  <div id="map"></div>
+
+  <div class="row h-25 content pl-3">
+    <div class="col-12">
+      <!-- <input type="text" id="txtIP" placeholder="Enter IP address" (keyup)="updateIPAddressInput($event.target.value)"> -->
+      <div class="input-group mb-3">
+        <div class="row w-100 pl-3">
+          <div class="col-xs-12 col-sm-4 col-lg-4 p-0 m-0">
+            <input type="text" id="txtIP" class="form-control" placeholder="Enter IP address" 
+              (keyup)="updateIPAddressInput($event.target.value)"
+              aria-label="Enter IP address" aria-describedby="basic-addon2">
+          </div>
+          <div class="col-xs-12 col-sm-4 col-lg-4 p-0 m-0">
+            <button (click)="getMaxMindGeoLocation(txtInputIP)" class="btn btn-primary w-100">Find IP Location</button>
+          </div>
+          <div class="col-xs-12 col-sm-4 col-lg-4 p-0 m-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text w-100" id="basic-addon2">Your IP: {{ipAddress}}</span>
+            </div>
+          </div>
+        </div>
+        
+        
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <div id="map"></div>
+    </div>
+  </div>
 
 </div>
+

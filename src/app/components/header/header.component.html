@@ -16,22 +16,28 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
+
       <li class="nav-item active">
-        <a class="nav-link" href="#"
+        <a class="nav-link" href="home"
           >Home <span class="sr-only">(current)</span></a
         >
       </li>
 
       <li class="nav-item geo-links-main">
-        <a class="nav-item nav-link" href="/world-nooz/{{lat}}/{{lon}}">Nearby</a>
+        <a class="nav-item nav-link" href="/map">IP to location</a>
       </li>
+
+
+      <!-- <li class="nav-item geo-links-main">
+        <a class="nav-item nav-link" href="/world-nooz/{{lat}}/{{lon}}">Nearby</a>
+      </li> -->
       <li class="nav-item geo-links-main">
         <a class="nav-item nav-link" href="/world-nooz/{{countryCode}}">{{country}}</a>
       </li>
 
-      <li class="nav-item geo-links-main">
+      <!-- <li class="nav-item geo-links-main">
         <a class="nav-item nav-link" href="/trending-nooz">Trending</a>
-      </li>
+      </li> -->
 
       <li class="nav-item geo-links-main">
         <a class="nav-item nav-link" href="/world-nooz">Worldwide</a>
@@ -40,16 +46,16 @@
         <a class="nav-item nav-link" href="/about">About</a>
       </li>
       <li class="nav-item">
+        <a class="nav-item nav-link" href="/investor">Partnership</a>
+      </li>
+      <!-- <li class="nav-item">
         <a class="nav-item nav-link" href="/privacy">Privacy Policy</a>
       </li>
       <li class="nav-item">
         <a class="nav-item nav-link" href="/terms">Terms</a>
-      </li>
+      </li> -->
       <li class="nav-item">
         <a class="nav-item nav-link" href="/contact">Contact</a>
-      </li>
-      <li class="nav-item geo-links-main">
-        <a class="nav-item nav-link" href="/map">Map view</a>
       </li>
 
       <!-- <li class="nav-item">
@@ -95,39 +101,36 @@
 <div class="container">
   <div class="row geo-links">
     <div class="col">
-      <ul class="navbar-nav mr-auto" style="flex-direction: row;">
-        <li class="nav-item">
+      <ul class="navbar-nav mr-auto" style="flex-direction: row; flex-wrap: wrap;">
+        <!-- <li class="nav-item">
           <a class="nav-item nav-link" href="/world-nooz/{{lat}}/{{lon}}">Nearby</a>
+        </li> -->
+        <li class="nav-item">
+          <a class="nav-item nav-link" href="/map">IP to location</a>
         </li>
         <li class="nav-item">
           <i class="material-icons" style="margin-top: 13px;font-size: 1rem;">arrow_forward</i>
         </li>
         <li class="nav-item">
-          <a class="nav-item nav-link" href="/world-nooz/{{countryCode}}" title="Explore posts related to {{country}}">{{country}}</a>
+          <a class="nav-item nav-link" href="/world-nooz/{{countryCode}}" title="Explore events related to {{country}}">{{country}}</a>
         </li>
         <li class="nav-item">
           <i class="material-icons" style="margin-top: 13px;font-size: 1rem;">arrow_forward</i>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-item nav-link" href="/trending-nooz">Trending</a>
-        </li>
-        <li class="nav-item">
+        </li> -->
+        <!-- <li class="nav-item">
           <i class="material-icons" style="margin-top: 13px;font-size: 1rem;">arrow_forward</i>
-        </li>
+        </li> -->
         <li class="nav-item">
           <a class="nav-item nav-link" href="/world-nooz">World</a>
-        </li>
-        <li class="nav-item">
-          <i class="material-icons" style="margin-top: 13px;font-size: 1rem;">arrow_forward</i>
-        </li>
-        <li class="nav-item">
-          <a class="nav-item nav-link" href="/map">Map</a>
         </li>
   
       </ul>
     </div>
   </div>
-  <div class="row">
+  <div class="row  d-none">
     <div class="col-1" *ngIf="showSearch===undefined || (showSearch && (allNoozShared.length || trendingNoozShared.length))">
       <a href="javascript:history.back()" style="position: absolute; top: 15px;" *ngIf="(allNoozShared.length || trendingNoozShared.length)"> <i class="fa fa-arrow-left"></i> </a>
       <a href="/home" style="position: absolute; top: 15px;" *ngIf="(!allNoozShared.length && !trendingNoozShared.length)"> <i class="fa fa-arrow-left"></i> </a>

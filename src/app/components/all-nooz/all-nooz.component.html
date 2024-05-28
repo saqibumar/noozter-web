@@ -2,7 +2,7 @@
   <div *ngIf="isLoading">Loading...</div>
 
   <div class="content">
-    <div class="row" *ngFor="let nooz of allNoozShared; let i = index">
+    <div class="row d-none" *ngFor="let nooz of allNoozShared; let i = index">
       <a
         routerLink="/nooz/{{ nooz.NoozId }}/{{ selectedCountryCode || 'x' }}/x"
         class="aLinkNoStyle"
@@ -35,7 +35,7 @@
         />
       </div>
     </div>
-    <div class="row">
+    <div class="row  d-none">
       <input
         [disabled]="isLoading || pageNumber <= 1"
         type="button"
@@ -62,14 +62,44 @@
         No posts to show for the selected country
       </div>
       <div *ngIf="!selectedCountryCode">
-        <h1 class="head1">Select a country below to see their latest posts.</h1>
+        <h1 class="head1">Select a country below to see in the map.</h1>
       </div>
       <hr class="head1" style="border: 1px solid green; border-radius: 5px; width: 100%" />
     </div>
+    <!-- <div class="row">
+      <div
+        class="col-sm-4 col-md-4 col-lg-4"
+        *ngFor="let cc of countryCodes; let i = index"
+      >
+        <a routerLink="{{ currentRoute.replace('/home', '') }}/world-nooz/{{ cc }}" *ngIf="referer && countryIndex !== i">
+          {{ GetCountryName(cc) }}
+        </a>
+        <a routerLink="{{ currentRoute.replace('/home', '') }}/{{ cc }}" *ngIf="!referer && countryIndex !== i">
+          {{ GetCountryName(cc) }}
+        </a>
+        <div *ngIf="countryIndex === i">
+          {{ GetCountryName(cc) }}
+        </div>
+      </div>
+    </div> -->
     <div class="row">
-      <nav class="navbar navbar-expand-sm navbar-light bg-light">
+      <div
+        class="col-12">
+        <app-map mapReferer="world" *ngIf="referer!='home'"></app-map>
+      </div>
+    </div>
+
+    <!-- <div class="row" *ngIf="homeCC!==selectedCountryCode"> -->
+    <div class="row container">
+      <nav class="navbar navbar-expand-sm navbar-light bg-light w-100">
         <!-- <a class="navbar-brand" href="#">Navbar</a> -->
-        <button id="btnCountryListNav" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation" (click)="isCollapsed = !isCollapsed">
+        <button id="btnCountryListNav" class="navbar-toggler" type="button" data-toggle="collapse" 
+          data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" 
+          aria-label="Toggle navigation" (click)="isCollapsed = !isCollapsed">
+          <span class="material-symbols-outlined w50" style="vertical-align: middle;">
+            globe
+            </span>
+            <span style="font-size: 15px;">Explore a few countries</span>
           <span class="navbar-toggler-icon"></span>
         </button>
       
@@ -103,27 +133,6 @@
         </div>
       </nav>
     </div>
-    <!-- <div class="row">
-      <div
-        class="col-sm-4 col-md-4 col-lg-4"
-        *ngFor="let cc of countryCodes; let i = index"
-      >
-        <a routerLink="{{ currentRoute.replace('/home', '') }}/world-nooz/{{ cc }}" *ngIf="referer && countryIndex !== i">
-          {{ GetCountryName(cc) }}
-        </a>
-        <a routerLink="{{ currentRoute.replace('/home', '') }}/{{ cc }}" *ngIf="!referer && countryIndex !== i">
-          {{ GetCountryName(cc) }}
-        </a>
-        <div *ngIf="countryIndex === i">
-          {{ GetCountryName(cc) }}
-        </div>
-      </div>
-    </div> -->
-    <div class="row">
-      <div
-        class="col-12">
-        <app-map mapReferer="world" *ngIf="referer!='home'"></app-map>
-      </div>
-    </div>
+
   </div>
 </div>

@@ -20,7 +20,23 @@ img {
   width: 100%;
 }
 
+/* .scrollable {
+  position: absolute;
+  z-index: 9;
+  overflow-y: scroll;
+  background-color: #F8F9FA;
+  width: 68vw;
+  border: 0.5px solid #336699;
+  border-radius: 0 10px 10px 10px;
+  margin-left: 0px;
+  padding-bottom: 10px;
+} */
 
+@media screen and (min-width: 768px) {
+  .container {
+    max-width: 100% !important;
+}
+}
 
 @media screen and (max-width: 767px) {
   .head1 {
@@ -31,14 +47,18 @@ img {
 
 @media screen and (max-width: 575px) {
   
-  .scrollable {
+  /* .scrollable {
     position: absolute;
     height: 300px;
     z-index: 9;
     overflow-y: scroll;
     background-color: #F8F9FA;
     width: 300px;
-  }
+    border: 0.5px solid #336699;
+    border-radius: 0 10px 10px 10px;
+    margin-left: 0px;
+    padding-bottom: 10px;
+  } */
 }
 
 

@@ -61,6 +61,7 @@ export class AuthInterceptor implements HttpInterceptor {
             }
           },
           (err) => {
+            //The line below redirects any api failure to home page
             this.router.navigate(["/home"]);
             if (err.status === 401) {
               // console.log(err);
@@ -70,8 +71,11 @@ export class AuthInterceptor implements HttpInterceptor {
             } else if (err.status === 415) {
               // console.log(err.error + err.status);
               // this.toastr.Error("Error de operación", "Error " + err.statusText);
-            } else {
-              //console.log('ERROR in else ' + err.status);
+            } else if (err.status === 500) {
+              // console.log(err.error + err.status);
+              // this.toastr.Error("Error de operación", "Error " + err.statusText);
+            }else {
+              // console.log('ERROR in else ' + err.url);
               // console.log(err);
               //this.toastr.Error(err.error, "Error " + err.statusText);
             }

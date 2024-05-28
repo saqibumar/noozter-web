@@ -1,4 +1,6 @@
+
 <div class="container" style="padding:20px;">
+
   <!-- <div class="row" style="border: 0px solid #73100b;padding: 20px;">
       <div class="col-12" style="background: linear-gradient(to right,#73100b, #e01e1e);
       color: antiquewhite;">  
@@ -32,20 +34,72 @@
         </p>
     </div>
   </div> -->
-  <div class="row">
-    &nbsp;
-  </div>
+
   <div class="row" style="border: 0px solid #336699;
   padding: 20px;">
     <div class="col-12" style="background: linear-gradient(to right,#0a0e3b, #535fde);color: antiquewhite;">
 <h2>
-    Suggestions & General inquiries about noozter
+  Inquiries & Suggestions
   </h2>
     </div>
-  <div class="col-12" style="padding-top:40px;text-align: center;;background: lightyellow;color: #336688;border: 1px dashed;height:200px;">
+  <div class="col-12" *ngIf="!mailSuccess"
+    style="padding-top:40px;text-align: center;background: linear-gradient(to right,#fff, #336699);color: #336688;border: 1px dashed;padding: 20px;text-align: left;">
     <p>
-      Write us at <a href="mailto:info@programmingalternatives.com">info@programmingalternatives.com</a> for any questions and suggestions.
+      Write us at <a href="mailto:info@programmingalternatives.com">info@noozter.com</a> for any questions and suggestions.
     </p>
-    </div>
+    <form [formGroup]="contactForm" id="demo-form" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label for="from" class="form-label">Email *</label>
+        <input type="from" class="form-control" id="from" formControlName="from" required>
+        <div *ngIf="from.invalid && (from.dirty || from.touched)" class="invalid-feedback">
+          <span *ngIf="from.errors?.required">Email is required.</span>
+          <span *ngIf="from.errors?.email">Please enter a valid email address.</span>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="phone" class="form-label">Phone * <i>(prefix + to add country code)</i></label>
+        <input type="tel" class="form-control" id="phone" formControlName="phone" required>
+        <div *ngIf="phone.invalid && (phone.dirty || phone.touched)" class="invalid-feedback">
+          <span *ngIf="phone.errors?.required">Phone number is required.</span>
+          <span *ngIf="phone.errors?.pattern">Please enter a valid phone number.</span>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="name" class="form-label">Name *</label>
+        <input type="text" class="form-control" id="name" formControlName="name" required>
+        <div *ngIf="name.invalid && (name.dirty || name.touched)" class="invalid-feedback">
+          <span *ngIf="name.errors?.required">Name is required.</span>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="body" class="form-label">Message *</label>
+        <textarea class="form-control" id="body" rows="3" formControlName="body" required></textarea>
+        <div *ngIf="body.invalid && (body.dirty || body.touched)" class="invalid-feedback">
+          <span *ngIf="body.errors?.required">Message is required.</span>
+        </div>
+      </div>
+  
+      <button type="submit" class="btn btn-primary" [disabled]="loading">Submit
+  
+        <div class="spinner-border" role="status" 
+                *ngIf="loading"
+                style="left: 18px;">
+                <span class="sr-only">Loading...</span>
+              </div>
+      </button>
+      <!-- <button type="submit" class="btn btn-primary" [disabled]="contactForm.invalid">Submit</button> -->
+    </form>
+  </div>
+  <div class="col-12">
+    <hr>
+    <span class="success" *ngIf="this.contactForm.valid && btnSubmitted && mailSuccess===true">Message sent! Thank you for your time to write us. Our team will contact you as soon as possible.</span>
+    <span class="error" *ngIf="this.contactForm.valid && btnSubmitted && mailSuccess===false">Failed to send! Please try again</span>
+  </div>
+  <div class="col-12" *ngIf="this.contactForm.valid && btnSubmitted && mailSuccess===true">
+    <app-about></app-about>
+  </div>
   </div>
 </div>

@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { getCode, getName } from 'country-list';
 import { GeoService } from '../../services/Geo.service';
 import { DOCUMENT } from '@angular/common';
+import { GeolocationService } from '../map/geolocation.service';
 
 @Component({
   selector: 'header',
@@ -45,6 +46,7 @@ export class HeaderComponent implements OnInit {
     httpBackend: HttpBackend, 
     private router: Router,
     private route: ActivatedRoute,
+    private geolocationService: GeolocationService,
     private renderer: Renderer2, @Inject(DOCUMENT) private document: Document) {
     this.httpClient = new HttpClient(httpBackend);
     this.allNoozShared = [];
@@ -99,8 +101,9 @@ export class HeaderComponent implements OnInit {
         } else {
           this.country_flag = this.country_flag.replace(`${this.countryCode.toLocaleLowerCase()}_`, `${msg.toLocaleLowerCase()}_`);
         }
-        this.countryCode = msg;
+        // this.countryCode = msg;
         this.selectedCountryCode = msg;
+        // this.selectedCountry = this.geoSvc.getName(this.selectedCountryCode);
         this.selectedCountry = getName(this.selectedCountryCode);
         this.selectedLang = this.geoSvc.getLang(this.selectedCountryCode);
       }
@@ -125,7 +128,6 @@ export class HeaderComponent implements OnInit {
       //this.country_flag = this.country_flag.replace(this.countryCode.toLocaleLowerCase(), this.countryFlagShared.toLocaleLowerCase());
     // }
 
-
   }
 
   filterNooz(inp: string) {
@@ -148,7 +150,8 @@ export class HeaderComponent implements OnInit {
   async getIPAddressAndGeoLocation()
   {
     const promise = new Promise((resolve, reject) => {
-      this.httpClient.get("https://api.ipify.org/?format=json").subscribe(async (res:any) => {
+      this.geolocationService.detectIP().subscribe(async(res:any) => {
+      // this.httpClient.get("https://api.ipify.org/?format=json").subscribe(async (res:any) => {
         this.ipAddress = res.ip;
         await this.getGeoLocation(this.ipAddress);
         resolve(true);
@@ -201,6 +204,11 @@ export class HeaderComponent implements OnInit {
       }
     });
     return promise;
+  }
+
+  GetCountryName(countryCode) {
+    return this.geoSvc.getName(countryCode);
+    //return getName(countryCode);
   }
 }
 

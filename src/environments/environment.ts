@@ -7,6 +7,7 @@ export const environment = {
     accessToken: 'pk.eyJ1Ijoicm9kcmlnb2thbWFkYSIsImEiOiJjbGZ5NTVhenAwanBzM3Fta3Y3b29temE5In0.PkdHrkHBrx9RALYhyLMRxA',
   },
   production: false,
+  noozterAPI: "https://api.programmingalternatives.com/api/v1",
   noozDomain_old: "https://noozterwebapi.azurewebsites.net/api/v1/nooz",
   noozDomain: "https://api.programmingalternatives.com/api/v1/nooz",
   authToken:
@@ -21,4 +22,4 @@ export const environment = {
  * below file. Don't forget to comment it out in production mode
  * because it will have a performance impact when errors are thrown
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.

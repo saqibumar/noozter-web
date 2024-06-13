@@ -2,13 +2,14 @@ import { Component, Inject, OnInit, Renderer2 } from '@angular/core';
 import { AllNoozService } from '../all-nooz/all-nooz.service';
 import { TrendingNoozService } from '../trending-nooz/trending-nooz.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { HttpClient, HttpBackend  } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { getCode, getName } from 'country-list';
 import { GeoService } from '../../services/Geo.service';
 import { DOCUMENT } from '@angular/common';
 import { GeolocationService } from '../map/geolocation.service';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'header',
@@ -36,6 +37,7 @@ export class HeaderComponent implements OnInit {
   showSearch: boolean;
   allNoozShared: any = [];
   countryFlagShared: any = '';
+  previousFlagSelected: any = '';
   trendingNoozShared: any = [];
   private httpClient: HttpClient;
 
@@ -68,7 +70,6 @@ export class HeaderComponent implements OnInit {
     // console.log(cc, this.selectedLang);
 
     const extracted_countryCode_url = this.router.url.split(/[/ ]+/).pop();
-    // console.log(extracted_countryCode_url)
     // this.countryCode = extracted_countryCode_url;
     if (extracted_countryCode_url.length === 2)
       this.country_flag = this.country_flag.replace(this.countryCode.toLocaleLowerCase(), extracted_countryCode_url.toLocaleLowerCase());
@@ -93,13 +94,14 @@ export class HeaderComponent implements OnInit {
     this.noozSvc.allNooz$.subscribe(msg => this.allNoozShared = msg);
     this.noozSvc.inSearch$.subscribe(msg => this.showSearch = msg);
     this.noozSvc.countryFlag$.subscribe(msg => {
-      this.countryFlagShared = msg
+      this.countryFlagShared = msg;
       if (this.countryFlagShared.length) {
-        // console.log('flag', this.country_flag, '>>>', this.countryCode)
         if (!this.countryCode) {
-          this.country_flag = this.country_flag.replace(`${this.countryFlagShared.toLocaleLowerCase()}_`, `${msg.toLocaleLowerCase()}_`);
+          this.country_flag = this.country_flag.replace(`${this.countryFlagShared.toLocaleLowerCase()}`, `${msg.toLocaleLowerCase()}`);
         } else {
-          this.country_flag = this.country_flag.replace(`${this.countryCode.toLocaleLowerCase()}_`, `${msg.toLocaleLowerCase()}_`);
+          // console.log('2flag', this.country_flag, '>>>', this.countryCode, this.countryFlagShared, msg, this.previousFlagSelected)
+          this.country_flag = this.country_flag.replace(`${this.previousFlagSelected.toLocaleLowerCase() || this.countryCode.toLocaleLowerCase()}.png`, `${msg.toLocaleLowerCase()}.png`);
+          this.previousFlagSelected = msg.toLocaleLowerCase();
         }
         // this.countryCode = msg;
         this.selectedCountryCode = msg;
@@ -161,7 +163,7 @@ export class HeaderComponent implements OnInit {
     return promise;
   }
 
-  async getGeoLocation(ip: string)
+  async getGeoLocation2(ip: string)
   {
     const promise = new Promise((resolve, reject) => {
       if (typeof window === 'undefined') return;
@@ -188,20 +190,82 @@ export class HeaderComponent implements OnInit {
       } else {
         // e341bebc49334ad29b0ed2e363d6f537
         // this.httpClient.get(`http://ip-api.com/json/${ip}`).subscribe((res:any)=>{
-        this.httpClient.get(`https://api.ipgeolocation.io/ipgeo?apiKey=e341bebc49334ad29b0ed2e363d6f537&ip=${ip}`).subscribe((res:any) => {
-          window.localStorage.setItem('geo', JSON.stringify(res));
-          this.country = res.country_name;
-          this.city = res.city;
-          this.countryCode = res.country_code2;
-          this.regionName = res.city;
-          this.lat = res.latitude;
-          this.lon = res.longitude;
-          this.country_flag = res.country_flag;
+        this.httpClient.get(`https://api.ipgeolocation.io/ipgeo?apiKey=e341bebc49334ad29b0ed2e363d6f537&ip=${ip}`)
+        .pipe(
+          catchError((error) => {
+            console.error('Error occurred while fetching geolocation data:', error);
+            this.getGeoLocation(ip)
+            // Handle the error as needed, for example, return a default value
+            return of(null);
+          })
+        ).subscribe((res:any) => {
+          console.log(res)
+          if (res) {
+            window.localStorage.setItem('geo', JSON.stringify(res));
+            this.country = res.country_name;
+            this.city = res.city;
+            this.countryCode = res.country_code2;
+            this.regionName = res.city;
+            this.lat = res.latitude;
+            this.lon = res.longitude;
+            this.country_flag = res.country_flag;
+          } else {
+            console.warn('Geolocation data is not available.', this.countryCode);
+            // this.getAltGeoLocation(ip)
+          }
 
           resolve(res);
   
+        })
+      }
+    });
+    return promise;
+  }
+
+  async getGeoLocation(ip: string) {
+    const promise = new Promise((resolve, reject) => {
+
+      if (typeof window === 'undefined') return;
+      let hasIPChanged:boolean = false;
+      let res: any = window.localStorage.getItem('geo-maxmind')
+      res = JSON.parse(res);
+  
+      let localStorageIPAddress: any = window.localStorage.getItem('IPAddress');
+  
+      if (localStorageIPAddress !== this.ipAddress) {
+        window.localStorage.setItem('IPAddress', this.ipAddress);
+        hasIPChanged = true;
+      }
+  
+      if (res && !hasIPChanged) {
+        this.country = res.city.Country.Name;
+        this.regionName = res.city.Subdivisions[0].Name;
+        this.lat = res.city.Location.Latitude;
+        this.lon = res.city.Location.Longitude;
+        this.city = `${res.city.City.Names.en}` || null;
+        this.countryCode = res.city.Country.IsoCode;
+        this.country_flag = `../../../assets/flags/png100px/${this.countryCode.toLowerCase()}.png`;
+        resolve(res);
+      } else {
+        this.geolocationService.ip2Location(ip).subscribe((res:any) => {
+          if (!res.success) {
+            reject(res);
+            //throw new Error(res.message);
+          } else {
+            this.country = res.city.Country.Name;
+            this.regionName = res.city.Subdivisions[0].Name;
+            this.lat = res.city.Location.Latitude;
+            this.lon = res.city.Location.Longitude;
+            
+            this.city = `${res.city.City.Names.en}` || null;
+            this.countryCode = res.city.Country.IsoCode;
+            this.country_flag = `../../../assets/flags/png100px/${this.countryCode.toLowerCase()}.png`;
+            console.log(this.country_flag);
+            resolve(res);
+          }
         });
       }
+
     });
     return promise;
   }

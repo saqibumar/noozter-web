@@ -12,3 +12,12 @@ h1 {
   }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+  
+mat-dialog-container {
+    background: linear-gradient(to right, #ced4da, gray) !important;
+  }
+  .mat-dialog-content {
+    padding: 0;
+  }

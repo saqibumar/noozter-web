@@ -1,5 +1,11 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Noozter <img style="width: 2rem; border: 1px solid #fff;" src="{{country_flag}}" alt="Flag of {{selectedCountry || country}}" /></a> 
+  <a class="navbar-brand" href="#">Noozter 
+    <img 
+      *ngIf="(selectedCountry || country)" 
+      style="width: 2rem; border: 1px solid #fff;" 
+      src="{{country_flag}}" 
+      alt="Flag of {{selectedCountry || country}}" />
+  </a> 
   <h3 class="country_heading" *ngIf="selectedCountry">({{selectedCountry}})</h3>
 
   <button
@@ -32,7 +38,7 @@
         <a class="nav-item nav-link" href="/world-nooz/{{lat}}/{{lon}}">Nearby</a>
       </li> -->
       <li class="nav-item geo-links-main">
-        <a class="nav-item nav-link" href="/world-nooz/{{countryCode}}">{{country}}</a>
+        <a class="nav-item nav-link" href="/world-nooz/{{countryCode.toLowerCase()}}">{{country}}</a>
       </li>
 
       <!-- <li class="nav-item geo-links-main">
@@ -112,7 +118,7 @@
           <i class="material-icons" style="margin-top: 13px;font-size: 1rem;">arrow_forward</i>
         </li>
         <li class="nav-item">
-          <a class="nav-item nav-link" href="/world-nooz/{{countryCode}}" title="Explore events related to {{country}}">{{country}}</a>
+          <a class="nav-item nav-link" href="/world-nooz/{{countryCode.toLowerCase()}}" title="Explore events related to {{country}}">{{country}}</a>
         </li>
         <li class="nav-item">
           <i class="material-icons" style="margin-top: 13px;font-size: 1rem;">arrow_forward</i>

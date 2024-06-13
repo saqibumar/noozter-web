@@ -110,11 +110,11 @@
                 class="col-sm-4 col-md-4 col-lg-4 nav-item"
                 *ngFor="let cc of countryCodes; let i = index"
               >
-                <a routerLink="{{ currentRoute.replace('/home', '') }}/world-nooz/{{ cc }}" 
+                <a routerLink="{{ currentRoute.replace('/home', '') }}/world-nooz/{{ cc.toLowerCase() }}" 
                   *ngIf="referer && countryIndex !== i">
                   {{ GetCountryName(cc) }}
                 </a>
-                <a routerLink="{{ currentRoute.replace('/home', '') }}/{{ cc }}" 
+                <a routerLink="{{ currentRoute.replace('/home', '') }}/{{ cc.toLowerCase() }}" 
                   *ngIf="!referer && countryIndex !== i">
                   {{ GetCountryName(cc) }}
                 </a>

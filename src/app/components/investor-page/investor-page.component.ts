@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { InvestDialogComponent } from '../invest-dialog/invest-dialog.component';
+// import { ContactComponent } from '../contact/contact.component';
 
 
 @Component({
@@ -17,6 +18,7 @@ export class InvestorPageComponent implements OnInit {
 
   openInvestDialog(): void {
     this.dialog.open(InvestDialogComponent);
+    // this.dialog.open(ContactComponent);
   }
 
 }

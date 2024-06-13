@@ -92,6 +92,9 @@ export class MapComponent implements AfterViewInit {
   error: string | null = null;
   permissionDenied: boolean = false;
 
+  permissionStatus: string;
+  watchId: number;
+
   private geoSvc: GeoService;
   constructor(
     private meta: Meta,
@@ -106,9 +109,17 @@ export class MapComponent implements AfterViewInit {
   }
 
   ngOnInit() {
+    this.getCurrentPosition();
     this.route.params.subscribe((params) => {
       this.CreateSEOMetaTags(params);
     });
+    // this.checkGeolocationPermission();
+  }
+
+  ngOnDestroy(): void {
+    if (this.watchId != null) {
+      navigator.geolocation.clearWatch(this.watchId);
+    }
   }
 
   CreateSEOMetaTags (params) {
@@ -145,6 +156,77 @@ export class MapComponent implements AfterViewInit {
         "Event in " + placeString + ", countrywide, Quickview maps, Current affairs, posts, latest events, latest posts, search countries, search city, explore area using interactive map",
     });
   }
+
+  //////////////////////////////////
+  checkGeolocationPermission(): void {
+    if (typeof navigator === 'undefined') return;
+    if (navigator.permissions) {
+      navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+        this.permissionStatus = result.state;
+        this.handlePermissionChange(result.state);
+
+        // Listen for permission changes
+        result.onchange = () => {
+          this.permissionStatus = result.state;
+          this.handlePermissionChange(result.state);
+        };
+      });
+    } else {
+      // Permissions API is not supported, fallback to geolocation check
+      this.getLocationUpdates();
+    }
+  }
+
+  handlePermissionChange(status: string): void {
+    switch (status) {
+      case 'granted':
+      case 'prompt':
+        this.getLocationUpdates();
+        break;
+      case 'denied':
+        this.showPermissionDeniedMessage();
+        break;
+    }
+  }
+
+  getLocationUpdates(): void {
+    if (this.watchId != null) {
+      navigator.geolocation.clearWatch(this.watchId);
+    }
+    this.watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        console.log('Latitude:', position.coords.latitude);
+        console.log('Longitude:', position.coords.longitude);
+      },
+      (error) => {
+        if (error.code === error.PERMISSION_DENIED) {
+          this.showPermissionDeniedMessage();
+        } else {
+          console.error('Error getting location:', error);
+        }
+      }
+    );
+  }
+  getLocation(): void {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        console.log('Latitude:', position.coords.latitude);
+        console.log('Longitude:', position.coords.longitude);
+      },
+      (error) => {
+        if (error.code === error.PERMISSION_DENIED) {
+          this.showPermissionDeniedMessage();
+        } else {
+          console.error('Error getting location:', error);
+        }
+      }
+    );
+  }
+
+  showPermissionDeniedMessage(): void {
+    this.toastr.warning('Location permission is denied. Please enable it in your browser settings.');
+  }
+  /////////////////////////////////
 
 
   txtInputIP = '';
@@ -248,7 +330,7 @@ export class MapComponent implements AfterViewInit {
             (error: any) => {
               this.permissionDenied = true;
               // console.log(error);
-              this.toastr.warning('The location permission was denied.');
+              this.toastr.warning('Location permission is denied. Please enable it in your browser settings.');
               this.coordsFromIP = true;
               this.popup = this.mapService.L.popup().setContent('<span style="color:red;">Your estimated location</span>');
 
@@ -288,10 +370,18 @@ export class MapComponent implements AfterViewInit {
       return promise;
   }
 
-  ValidateIPaddress(ipaddress) {  
+  ValidateIPaddress(ipaddress) { 
+
+    var ipv6 = ipaddress;
+
+    var ipv6_pattern = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$|^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/;
+    
+        
     if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress)) {  
-      return (true)  
-    }  
+      return (true)
+    } else if (/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$|^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/.test(ipv6)) {
+      return (true)
+    }
     this.toastr.error("You have entered an invalid IP address!")  
     return (false)  
   }  
@@ -334,7 +424,7 @@ export class MapComponent implements AfterViewInit {
                     if (e!='ISO3166-2-lvl4' && e!='country_code') searchQuery += (index ? ', ' : '') + response.address[e]
                   });
                 };
-                var popup = this.mapService.L.popup().setContent(`<strong>[${res.city.Location.Latitude.toFixed(3)}, ${res.city.Location.Longitude.toFixed(3)}]</strong><br>${innerHTML}`);        
+                var popup = this.mapService.L.popup().setContent(`<strong>[${res.city.Location.Latitude.toFixed(3)}, ${res.city.Location.Longitude.toFixed(3)}]</strong><br>${innerHTML}`);
                 // console.log(`${ this.mapService.L.control.getMousePosition() }`)
                 // this.marker = this.mapService.L.marker([lat, lng], { icon, draggable:false }).bindPopup(popup);
                 this.marker = this.mapService.L.marker([res.city.Location.Latitude, res.city.Location.Longitude], { icon, draggable:true }).bindPopup(popup);
@@ -374,7 +464,7 @@ export class MapComponent implements AfterViewInit {
     return promise;
   }
 
-  getGeoLocation(ip: string)
+  getGeoLocation2(ip: string)
   {
     this.coordsFromIP = true;
     this.popup = this.mapService.L.popup().setContent('<span style="color:red;">Your estimated location</span>');
@@ -443,6 +533,55 @@ export class MapComponent implements AfterViewInit {
       return promise;
   }
 
+  async getGeoLocation(ip: string) {
+    const promise = new Promise((resolve, reject) => {
+
+      if (typeof window === 'undefined') return;
+      let hasIPChanged:boolean = false;
+      let res: any = window.localStorage.getItem('geo-maxmind')
+      res = JSON.parse(res);
+  
+      let localStorageIPAddress: any = window.localStorage.getItem('IPAddress');
+  
+      if (localStorageIPAddress !== this.ipAddress) {
+        window.localStorage.setItem('IPAddress', this.ipAddress);
+        hasIPChanged = true;
+      }
+  
+      if (res && !hasIPChanged) {
+        this.country = res.city.Country.Name;
+        this.regionName = res.city.Subdivisions[0].Name;
+        this.lat = res.city.Location.Latitude;
+        this.lon = res.city.Location.Longitude;
+        this.city = `${res.city.City.Names.en}` || null;
+        this.countryCode = res.city.Country.IsoCode;
+        this.country_flag = `../../../assets/flags/png100px/${this.countryCode.toLowerCase()}.png`;
+        resolve(res);
+      } else {
+        this.geolocationService.ip2Location(ip).subscribe((res:any) => {
+          if (!res.success) {
+            reject(res);
+            //throw new Error(res.message);
+          } else {
+            this.country = res.city.Country.Name;
+            this.regionName = res.city.Subdivisions[0].Name;
+            this.lat = res.city.Location.Latitude;
+            this.lon = res.city.Location.Longitude;
+            
+            this.city = `${res.city.City.Names.en}` || null;
+            this.countryCode = res.city.Country.IsoCode;
+            this.country_flag = `../../../assets/flags/png100px/${this.countryCode.toLowerCase()}.png`;
+            console.log(this.country_flag);
+            resolve(res);
+          }
+        });
+      }
+
+    });
+    return promise;
+  }
+
+
   public loadMap(userInitiated:boolean = false): void {
     let res: any = window.localStorage.getItem('geolocation-allowed')
     res = JSON.parse(res);
@@ -496,7 +635,7 @@ export class MapComponent implements AfterViewInit {
         this.marker.name = 'userIPMarker';
         this.marker.addTo(this.map);
       });
-    } else if ((this.mapReferer != 'world' && res) || (this.mapReferer != 'world' && userInitiated)) {
+    } else { //if ((this.mapReferer != 'world' && res) || (this.mapReferer != 'world' && userInitiated)) {
       this.getCurrentPosition().subscribe((position: any) => {
         this.map.flyTo([position.latitude, position.longitude], 13);
 

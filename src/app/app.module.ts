@@ -32,6 +32,7 @@ import { InvestDialogComponent } from './components/invest-dialog/invest-dialog.
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 const appRouter: Routes = [
   /*  { path: 'maps/:schoolCode', component: MapsComponent},
@@ -77,6 +78,7 @@ const appRouter: Routes = [
    { path: 'home/:Token', component: HomeComponent }, */
 
   // { path: '**', redirectTo: 'home' },
+  {path: '**', component: PageNotFoundComponent},
 ];
 @NgModule({
   declarations: [
@@ -95,6 +97,7 @@ const appRouter: Routes = [
     TrendingNoozComponent,
     InvestorPageComponent,
     InvestDialogComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     AutocompleteLibModule,

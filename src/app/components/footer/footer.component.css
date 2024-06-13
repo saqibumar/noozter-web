@@ -26,3 +26,25 @@
       position: relative;
     }
   }
+
+
+
+
+  /* Ads*/
+.ads_resp {
+  width: 320px;
+  height: 100px;
+  margin: 0 auto;
+}
+@media (min-width: 500px) {
+  .ads_resp {
+    width: 480px;
+    height: 60px;
+  }
+}
+@media (min-width: 900px) {
+  .ads_resp {
+    width: 900px;
+    height: 90px;
+  }
+}

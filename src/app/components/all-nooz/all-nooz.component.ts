@@ -103,7 +103,6 @@ export class AllNoozComponent implements OnInit {
     this.route.params.subscribe((params) => {
       // Force the menu to be closed once clicked on nav-item
       if (!this.isCollapsed) (this.document.getElementById("btnCountryListNav") as HTMLButtonElement).click(); 
-      // console.log('>>>>>>>>>>>>>', this.router.url, params);
       countryCode = params.countryCode;
       
       this.pageNumber = 1;
@@ -113,7 +112,7 @@ export class AllNoozComponent implements OnInit {
         setTimeout(() => {
           let htmlElement = this.document.querySelector('html');
           this.renderer.setAttribute(htmlElement, 'lang', this.selectedLang);
-        }, 0);
+        }, 100);
 
         this.noozSvc.updateCountryCode(countryCode);
         this.selectedCountryCode = countryCode;

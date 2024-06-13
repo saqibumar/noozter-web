@@ -1,3 +1,9 @@
+::-webkit-scrollbar {
+  display: none;
+}
+.map {
+  height: 40vh !important;
+}
 #map {
     height: 66vh; /* 400px; */
     width: 100%;
@@ -9,6 +15,7 @@
     font-family: cursive;
     display: block;
     text-align: center;
+    overflow: scroll;
   }
 
   .btn-locate-me {
@@ -44,7 +51,7 @@
     footer {
       display: none !important;
     }
-    @media screen and (max-width: 389px) {
+    @media screen and (max-width: 359px) {
       .locate-me {
         top: -42px;
         left: 87vw;
